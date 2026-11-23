@@ -3,6 +3,7 @@ import {useState,useEffect,useCallback} from 'react';
 import {html} from '../lib/html.js';
 import {sb} from '../lib/supabase.js';
 import {useAuth} from '../lib/auth.js';
+import {withProfiles,userHref} from '../lib/users.js';
 import {lang,t} from '../lib/i18n.js';
 import {Box,Empty} from '../components/common.js';
 
@@ -16,7 +17,7 @@ const NeedLogin=()=>html`<div class="fneed">${lang==='ru'?'Чтобы писат
 
 const Topics=()=>{
   const au=useAuth(),ru=lang==='ru',[cat,sc]=useState(''),[list,sl]=useState(null),[err,se]=useState(''),[nw,sn]=useState(false),[f,sf]=useState({cat:'general',title:'',body:''}),[bz,sb2]=useState(false);
-  const load=useCallback(async()=>{if(!sb){sl([]);return}const {data,error}=await sb.from('forum_topics').select('*').order('pin',{ascending:false}).order('last_at',{ascending:false}).limit(200);if(error){se(error.message);sl([]);return}se('');sl(data||[])},[]);
+  const load=useCallback(async()=>{if(!sb){sl([]);return}const {data,error}=await sb.from('forum_topics').select('*').order('pin',{ascending:false}).order('last_at',{ascending:false}).limit(200);if(error){se(error.message);sl([]);return}se('');sl(await withProfiles(data||[]))},[]);
   useEffect(()=>{load()},[load]);
   const create=async()=>{
     const ti=f.title.trim(),bd=f.body.trim();
@@ -25,7 +26,7 @@ const Topics=()=>{
     const {data,error}=await sb.from('forum_topics').insert({cat:f.cat,title:ti.slice(0,140),body:bd.slice(0,6000),uid:au.user.id,nick:pr.nick||'user',avatar:pr.avatar||null}).select().single();
     sb2(false);if(error)return se(error.message);location.hash='#/forum/'+data.id};
   const shown=(list||[]).filter(x=>!cat||x.cat===cat);
-  return html`<div class="col forum"><div class="bx"><h3><span>${t('forum')}</span>${au.user&&sb&&html`<button class="btn" onClick=${()=>sn(!nw)}>${nw?(ru?'Отмена':'Cancel'):(ru?'+ Новая тема':'+ New topic')}</button>`}</h3>
+  return html`<div class="col forum"><div class="bx"><h3><span>${t('forum')}</span><a class="btn" href="#/users">${ru?'Пользователи':'Users'}</a>${au.user&&sb&&html`<button class="btn" onClick=${()=>sn(!nw)}>${nw?(ru?'Отмена':'Cancel'):(ru?'+ Новая тема':'+ New topic')}</button>`}</h3>
 <div class="in"><div class="fcats"><button class=${!cat?'on':''} onClick=${()=>sc('')}>${ru?'Все':'All'}</button>${CATS.map(c=>html`<button key=${c[0]} class=${cat===c[0]?'on':''} onClick=${()=>sc(c[0])}>${cn(c[0])}</button>`)}</div>
 ${!sb&&html`<div class="fmsg">${ru?'Демо-режим: форум заработает после подключения Supabase.':'Demo mode: the forum works once Supabase is connected.'}</div>`}
 ${sb&&!au.user&&html`<${NeedLogin}/>`}
@@ -35,12 +36,12 @@ ${nw&&au.user&&html`<div class="fform"><select value=${f.cat} onChange=${e=>sf({
 ${list==null?html`<div class="in mu">…</div>`:shown.length?shown.map(x=>html`<a class=${'ftr'+(x.pin?' pin':'')} key=${x.id} href=${'#/forum/'+x.id}><span class="ft"><${Ava} x=${x} s=${34}/><span><b>${x.pin?'📌 ':''}${x.locked?'🔒 ':''}${x.title}</b><small>${cn(x.cat)} · ${x.nick} · ${fmt(x.created_at)}</small></span></span><span class="c">${x.replies||0}</span><span class="c d">${fmt(x.last_at||x.created_at)}</span></a>`):html`<${Empty} text=${ru?'Тем пока нет. Создайте первую!':'No topics yet'}/>`}</div></div></div>`};
 
 const Post=({p,au,op,onDel})=>{const own=au.user&&au.user.id===p.uid,can=own||au.admin;
-  return html`<div class=${'fpost'+(op?' op':'')}><div class="fp-a"><${Ava} x=${p} s=${48}/><b>${p.nick}</b></div><div class="fp-b"><div class="fp-h"><span class="mu">${fmt(p.created_at)}</span>${can&&html`<button class="lnk" onClick=${onDel}>${lang==='ru'?'Удалить':'Delete'}</button>`}</div><div class="fp-t">${p.body}</div></div></div>`};
+  return html`<div class=${'fpost'+(op?' op':'')}><div class="fp-a"><${Ava} x=${p} s=${48}/>${userHref(p)?html`<a class="fp-n" href=${userHref(p)}><b>${p.nick}</b></a>`:html`<b>${p.nick}</b>`}<small class="mu">ID ${p.pid||''}</small></div><div class="fp-b"><div class="fp-h"><span class="mu">${fmt(p.created_at)}</span>${can&&html`<button class="lnk" onClick=${onDel}>${lang==='ru'?'Удалить':'Delete'}</button>`}</div><div class="fp-t">${p.body}</div></div></div>`};
 
 const Topic=({id})=>{
   const au=useAuth(),ru=lang==='ru',[tp,st]=useState(null),[ps,sp]=useState([]),[err,se]=useState(''),[body,sbd]=useState(''),[bz,sz]=useState(false);
-  const load=useCallback(async()=>{if(!sb)return;const a=await sb.from('forum_topics').select('*').eq('id',id).maybeSingle();if(a.error)return se(a.error.message);st(a.data||false);
-    const b=await sb.from('forum_posts').select('*').eq('topic',id).order('id');if(b.error)return se(b.error.message);sp(b.data||[])},[id]);
+  const load=useCallback(async()=>{if(!sb)return;const a=await sb.from('forum_topics').select('*').eq('id',id).maybeSingle();if(a.error)return se(a.error.message);st(a.data?(await withProfiles([a.data]))[0]:false);
+    const b=await sb.from('forum_posts').select('*').eq('topic',id).order('id');if(b.error)return se(b.error.message);sp(await withProfiles(b.data||[]))},[id]);
   useEffect(()=>{load()},[load]);
   if(!sb)return html`<div class="bx in">${ru?'Демо-режим':'Demo mode'}</div>`;
   if(tp===false)return html`<div class="bx"><${Empty} text="404"/></div>`;
@@ -62,5 +63,5 @@ export const Forum=({id})=>id?html`<${Topic} key=${id} id=${id}/>`:html`<${Topic
 /* блок «Форум» на главной: последние темы */
 export const ForumBox=()=>{
   const ru=lang==='ru',[l,sl]=useState(null);
-  useEffect(()=>{if(!sb)return;sb.from('forum_topics').select('id,title,nick,replies,last_at,created_at,pin').order('pin',{ascending:false}).order('last_at',{ascending:false}).limit(5).then(r=>sl(r.error?[]:(r.data||[])))},[]);
+  useEffect(()=>{if(!sb)return;sb.from('forum_topics').select('id,title,uid,nick,replies,last_at,created_at,pin').order('pin',{ascending:false}).order('last_at',{ascending:false}).limit(5).then(async r=>sl(r.error?[]:await withProfiles(r.data||[])))},[]);
   return html`<${Box} h=${t('forum')} href="#/forum" more=${ru?'Открыть':'Open'}>${(l||[]).map(x=>html`<a class="nmini" key=${x.id} href=${'#/forum/'+x.id}><span>${x.pin?'📌 ':''}${x.title}</span><small>${x.nick} · ${x.replies||0} ${ru?'отв.':'repl.'}</small></a>`)}${(!l||!l.length)&&html`<div class="fbox"><span class="mu">${sb?(ru?'Тем пока нет':'No topics yet'):(ru?'Обсуждайте матчи и турниры':'Discuss matches and events')}</span><a class="btn" href="#/forum">${ru?'Перейти на форум':'Go to forum'}</a></div>`}<//>`};

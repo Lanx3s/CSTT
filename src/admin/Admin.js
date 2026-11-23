@@ -4,13 +4,13 @@ import {sb} from '../lib/supabase.js';
 import {fetchAll,load,MISSING,applyTheme,parseMaps,seriesOf,MS,SITE} from '../lib/data.js';
 import {useAuth,uploadImage} from '../lib/auth.js';
 import {S,nm,ctx,STAGES} from './schema.js';
-import {MapSel,MapsEd,VetoEd,PrizeEd,MdEd,PlSel,CcSel} from './editors.js';
+import {MapSel,MapsEd,VetoEd,PrizeEd,MdEd,PlSel,CcSel,PalSel} from './editors.js';
 import {genSingle,genDouble,genSwiss,genGroups,genGsl} from './gen.js';
 import {Plate} from '../components/common.js';
 
-const ORDER=['bracket','part','tournaments','matches','pstats','teams','players','titles','trophies','news','maps','site'];
+const ORDER=['bracket','part','tournaments','matches','pstats','teams','players','phist','titles','trophies','news','maps','site'];
 const TITLE={bracket:'Сетки турниров',part:'Участники турниров'};
-const WIDE=['plsel','area','md','mapsel','mapsed','vetoed','prized','h','img','imgs'];
+const WIDE=['pal','plsel','area','md','mapsel','mapsed','vetoed','prized','h','img','imgs'];
 
 /* ---------- универсальное поле ---------- */
 const Fld=({f,row,set,D})=>{
@@ -19,6 +19,7 @@ const Fld=({f,row,set,D})=>{
   if(ty==='area')i=html`<textarea rows="4" value=${v} onChange=${ch}/>`;
   else if(ty==='md')i=html`<${MdEd} v=${v} set=${x=>set(k,x)} D=${D}/>`;
   else if(ty==='cc')i=html`<${CcSel} v=${v} set=${x=>set(k,x)}/>`;
+  else if(ty==='pal')i=html`<${PalSel} v=${v} set=${x=>set(k,x)}/>`;
   else if(ty==='plsel')i=html`<${PlSel} v=${v} set=${x=>set(k,x)} D=${D}/>`;
   else if(ty==='mapsel')i=html`<${MapSel} v=${v} set=${x=>set(k,x)} D=${D}/>`;
   else if(ty==='mapsed')i=html`<${MapsEd} key=${row.id} v=${v} set=${x=>set(k,x)} D=${D}/>`;
@@ -121,18 +122,18 @@ ${present.length?present.map(([k,l])=>{const list=ms.filter(m=>m.stage===k),rs=[
 export const PartEd=({D,reload,note})=>{
   const [tid,st]=useState(D.tournaments.length?String(D.tournaments[D.tournaments.length-1].id):''),[bz,sb2]=useState(false);
   const cur=D.tteams.filter(x=>x.tour==tid);
-  const init=()=>{const m={};cur.forEach(x=>m[x.team]={on:true,grp:x.grp||'',seed:x.seed??'',id:x.id});return m};
+  const init=()=>{const m={};cur.forEach(x=>m[x.team]={on:true,grp:x.grp||'',seed:x.seed??'',note:x.note||'',id:x.id});return m};
   const [ed,se]=useState(init);useEffect(()=>{se(init())},[tid,D.tteams]);
   const set=(id,k,v)=>se(e=>({...e,[id]:{...(e[id]||{on:false,grp:'',seed:''}),[k]:v}}));
   const save=async()=>{sb2(true);try{
     for(const t of D.teams){const e=ed[t.id],ex=cur.find(x=>x.team===t.id);
-      if(e&&e.on){const p={tour:Number(tid),team:t.id,grp:e.grp||null,seed:e.seed===''?null:Number(e.seed)};const r=ex?await sb.from('tteams').update(p).eq('id',ex.id):await sb.from('tteams').insert(p);if(r.error)throw r.error}
+      if(e&&e.on){const p={tour:Number(tid),team:t.id,grp:e.grp||null,seed:e.seed===''?null:Number(e.seed),note:e.note||null};const r=ex?await sb.from('tteams').update(p).eq('id',ex.id):await sb.from('tteams').insert(p);if(r.error)throw r.error}
       else if(ex){const r=await sb.from('tteams').delete().eq('id',ex.id);if(r.error)throw r.error}}
     await reload();note('Участники сохранены')}catch(x){note('Ошибка: '+x.message+(/relation|tteams/.test(x.message)?' — выполните обновлённый supabase/schema.sql':''),1)}sb2(false)};
   const autoSeed=()=>{let n=0;se(e=>{const o={...e};D.teams.slice().sort((a,b)=>(b.pts||0)-(a.pts||0)).forEach(t=>{if(o[t.id]&&o[t.id].on)o[t.id]={...o[t.id],seed:++n}});return o})};
   return html`<div><h1>Участники турниров</h1><p class="hint">Отметьте команды турнира, задайте посев (1 — сильнейший) и группу (A, B…). Эти данные используются генератором сеток и страницей «Участники» на сайте.</p>
 <div class="tools"><select value=${tid} onChange=${e=>st(e.target.value)}>${D.tournaments.map(x=>html`<option key=${x.id} value=${x.id}>${x.n}</option>`)}</select><button class="b g" onClick=${autoSeed}>Посев по рейтингу</button><button class="b" disabled=${bz} onClick=${save}>${bz?'Сохранение…':'Сохранить'}</button></div>
-<table><thead><tr><th>В турнире</th><th>Команда</th><th>Посев</th><th>Группа</th></tr></thead><tbody>${D.teams.map(t=>{const e=ed[t.id]||{};return html`<tr key=${t.id}><td><input type="checkbox" checked=${!!e.on} onChange=${x=>set(t.id,'on',x.target.checked)}/></td><td>${t.logo&&html`<img src=${t.logo}/>`} ${t.name}</td><td><input type="number" class="sm" value=${e.seed??''} onChange=${x=>set(t.id,'seed',x.target.value)}/></td><td><input class="sm" value=${e.grp||''} onChange=${x=>set(t.id,'grp',x.target.value)}/></td></tr>`})}</tbody></table></div>`};
+<table><thead><tr><th>В турнире</th><th>Команда</th><th>Посев</th><th>Группа</th><th>Подпись на карточке (VRS (Europe)…)</th></tr></thead><tbody>${D.teams.map(t=>{const e=ed[t.id]||{};return html`<tr key=${t.id}><td><input type="checkbox" checked=${!!e.on} onChange=${x=>set(t.id,'on',x.target.checked)}/></td><td>${t.logo&&html`<img src=${t.logo}/>`} ${t.name}</td><td><input type="number" class="sm" value=${e.seed??''} onChange=${x=>set(t.id,'seed',x.target.value)}/></td><td><input class="sm" value=${e.grp||''} onChange=${x=>set(t.id,'grp',x.target.value)}/></td><td><input value=${e.note||''} placeholder=${t.region||''} onChange=${x=>set(t.id,'note',x.target.value)}/></td></tr>`})}</tbody></table></div>`};
 
 const Home=({D,go})=>html`<div><h1>Обзор</h1><div class="cnts">${ORDER.filter(k=>S[k]&&!S[k].one).map(k=>html`<button class="cnt" key=${k} onClick=${()=>go(k)}><b>${D[k].length}</b>${S[k].t}</button>`)}</div>
 <p class="hint">Как начать: 1) Команды → 2) Игроки → 3) Карты (картинки) → 4) Турнир (мап-пул, цвет, баннер) → 5) Участники → 6) «Сетки турниров» → генератор → 7) Матчи: карты, вето и статистика → 8) Титулы и Новости. Внешний вид сайта — в «Настройках сайта» (изменения видны сразу).</p></div>`;

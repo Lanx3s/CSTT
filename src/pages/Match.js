@@ -44,7 +44,6 @@ export const Match=({id})=>{
   return html`<div class="mpage">
 <div class="crumb"><a href="#/tournaments">${t('tournaments')}</a><i>›</i>${R?html`<a href=${'#/tournament/'+R.id}>${R.n}</a>`:null}<i>›</i><a href=${'#/tournament/'+m.tour+'/bracket'}>${t(m.stage)||'—'}${m.grp?' · '+t('group')+' '+m.grp:''}${m.rnd&&['Swiss','GSL','Group stage'].includes(m.stage)?' · '+t('round')+' '+m.rnd:''}</a></div>
 <section class="mhd" style=${bg}>
-${[[A,'a'],[B,'b']].map(([T,k])=>{const fs=T.tbd?null:flagSrc(T,640);return fs&&html`<span key=${k} class=${'bgf '+k} style=${{backgroundImage:'url("'+fs+'")',backgroundSize:'cover'}}></span>`})}
 <div class="mh-main"><${Side} id=${m.a} sc=${m.st==='up'?null:m.s1} cl=${f?(w===m.a?'w':w===m.b?'l':''):''}/>
 <div class="mcenter"><div class=${'hx-time'+(m.tm?'':' nd')}>${m.tm||m.d||'—'}</div>${m.tm&&m.d&&html`<div class="hx-date">${m.d}</div>`}${R&&html`<a class="hx-ev" href=${'#/tournament/'+R.id}>${R.n}</a>`}<div class=${'hx-st '+m.st}>${m.st==='live'?'● LIVE':f?t('finished'):'BO'+m.bo}</div>${m.st!=='up'&&html`<span class="bo">BO${m.bo}</span>`}</div>
 <${Side} id=${m.b} right=${1} sc=${m.st==='up'?null:m.s2} cl=${f?(w===m.b?'w':w===m.a?'l':''):''}/></div>

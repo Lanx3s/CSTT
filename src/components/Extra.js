@@ -1,9 +1,10 @@
 /* Соцсети, плашка гранд-финала на главной, составы и сравнение игроков в матче */
 import {html,F} from '../lib/html.js';
-import {MS,SITE,team,tour} from '../lib/data.js';
-import {t} from '../lib/i18n.js';
+import {useState} from 'react';
+import {MS,SITE,TEAMS as _TM,team,tour,pteam,PH,TROPH,TT} from '../lib/data.js';
+import {t,lang} from '../lib/i18n.js';
 import {byTime,f2,f1} from '../lib/calc.js';
-import {Box,TeamLogo,Flag,PlayerPic,Rt,Empty} from './common.js';
+import {Box,TeamLogo,Flag,PlayerPic,Rt,Empty,Hex,Ico} from './common.js';
 
 /* ---------- соцсети CSTT ---------- */
 const IC={
@@ -51,3 +52,43 @@ ${rows.map(([a,b],i)=>html`<div class="pc-r" key=${i}><span class="pn">${a?html`
 export const MatchInfo=({m})=>{
   const R=tour(m.tour),rows=[[t('tournaments'),R&&html`<a href=${'#/tournament/'+R.id}>${R.n}</a>`],[t('stage'),(t(m.stage)||m.stage)+(m.grp?' · '+m.grp:'')+(m.rnd&&['Swiss','GSL','Group stage'].includes(m.stage)?' · '+t('round')+' '+m.rnd:'')],[t('fmtM'),'BO'+m.bo],[t('dates'),[m.d,m.tm].filter(Boolean).join(' · ')],[t('status'),m.st==='live'?'LIVE':m.st==='fin'?t('finished'):t('soonT')]].filter(r=>r[1]);
   return html`<${Box} h=${t('info')}><table class="tbl ib"><tbody>${rows.map(([a,b])=>html`<tr key=${a}><td>${a}</td><td><b>${b}</b></td></tr>`)}</tbody></table><//>`};
+
+
+/* ---------- карточка игрока как на HLTV: фон за фото (цвет команды / свой цвет / без фона) ---------- */
+export const playerBg=p=>{
+  const m=p.bgm||SITE.pbg||'team';
+  if(m==='none')return null;
+  const c=m==='color'&&/^#[0-9a-f]{6}$/i.test(p.bgc||'')?p.bgc:(pteam(p).col||'#3f9b52');
+  return /^#[0-9a-f]{3,8}$/i.test(c)?c:'#3f9b52'};
+export const PlayerHero=({p,role})=>{
+  const c=playerBg(p),T=pteam(p),ru=lang==='ru';
+  const goStats=()=>{const e=document.querySelector('.stts');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})};
+  const sub=[p.name,p.age>0&&p.age+(ru?' лет':' years')].filter(Boolean).join(' · ');
+  return html`<div class=${'hxp'+(c?' bg':'')+(c&&p.bgp==='none'?' np':'')+(c&&p.bgp==='dots'?' dt':'')} style=${c?{'--pc':c}:null}>
+<div class="hxp-ic">${p.cc&&html`<span class="hxp-i fl"><${Flag} x=${p}/></span>`}${!T.tbd&&html`<a class="hxp-i lg" href=${'#/team/'+T.id} title=${T.name}><${TeamLogo} x=${T} s=${34}/></a>`}${role}</div>
+<${PlayerPic} p=${p} cls="xl"/>
+<div class="hxp-nm"><b>${p.nick}</b>${sub&&html`<small>${sub}</small>`}<button class="hxp-st" onClick=${goStats}>${ru?'Статистика игрока':'Player stats'}</button></div></div>`};
+
+/* ---------- плашка «История команд и достижения» (без дат) ---------- */
+export const PlayerHistory=({p})=>{
+  const ru=lang==='ru';
+  let rows=PH.filter(x=>x.player===p.id&&!x.hide);
+  if(!rows.length){ /* если админ ничего не настраивал — собираем из текущей команды и поля «Прошлые команды» */
+    const cur=p.team!=null?[{id:'c',team:p.team,name:'',cur:true}]:[];
+    const old=(p.prev||'').split(/[,;]+/).map(x=>x.trim()).filter(Boolean).map((n,i)=>({id:'o'+i,team:null,name:n,cur:false}));
+    rows=[...cur,...old].map(r=>{if(r.team==null&&r.name){const f=team_by_name(r.name);if(f)return {...r,team:f.id}}return r})}
+  if(!rows.length)return null;
+  const trs=r=>r.team==null?[]:TROPH.filter(y=>y.team===r.team&&(y.pl.length?y.pl.includes(p.id):r.cur));
+  return html`<${Box} h=${ru?'История команд и достижения':'Team history & achievements'} cls="phs"><div class="phs-h"><span>${ru?'Команда':'Team'}</span><span>${ru?'Трофеи':'Trophies'}</span></div>
+${rows.map(r=>{const T=r.team!=null?team(r.team):null,tr=trs(r),nm=T?T.name:r.name,logo=T?html`<${TeamLogo} x=${T} s=${28}/>`:r.logo?html`<img class="phl" src=${r.logo} alt=""/>`:html`<span class="phl ph">${(nm||'?').slice(0,2).toUpperCase()}</span>`;
+  const left=T&&!T.tbd?html`<a class="phs-t" href=${'#/team/'+T.id}>${logo}<b>${nm}</b></a>`:html`<span class="phs-t">${logo}<b>${nm}</b></span>`;
+  return html`<div class=${'phs-r'+(r.cur?' cur':'')} key=${r.id}>${left}<div class="phs-tr">${tr.map(y=>{const o=y.tour!=null?tour(y.tour):null,tip=[y.title,y.place,y.year].filter(Boolean).join(' · ');return o?html`<a key=${y.id} href=${'#/tournament/'+o.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></a>`:html`<span key=${y.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></span>`})}</div>${T&&!T.tbd&&html`<a class="phs-b" href=${'#/team/'+T.id}>${ru?'Команда':'Team'}</a>`}</div>`})}<//>`};
+const team_by_name=n=>_TM.find(x=>(x.name||'').toLowerCase()===n.toLowerCase()||(x.tag||'').toLowerCase()===n.toLowerCase());
+
+/* ---------- список команд турнира (как «Teams attending» на HLTV) ---------- */
+export const TeamsAttending=({o,teams})=>{
+  const ru=lang==='ru',[lu,sl]=useState(false);
+  if(!teams.length)return html`<${Empty}/>`;
+  const tt=new Map(TT.filter(x=>x.tour==o.id).map(x=>[x.team,x]));
+  return html`<${Box} h=${ru?'Участники':'Teams attending'} right=${html`<button class="tal-b" onClick=${()=>sl(!lu)}>${lu?(ru?'Скрыть составы':'Hide lineups'):(ru?'Показать составы':'Show lineups')}</button>`}><div class="in"><div class="tal">${teams.map(x=>{const g=tt.get(x.id)||{},sub=g.note||x.region||'';
+  return html`<a class="tal-c" key=${x.id} href=${'#/team/'+x.id}><span class="tal-r">#${x.rank}</span>${g.seed>0&&html`<span class="tal-s" title=${ru?'Посев':'Seed'}>#${g.seed}</span>`}<b class="tal-n">${x.name}</b>${lu?html`<span class="tal-l">${x.pl.slice(0,7).map(p=>html`<span key=${p.id}><${Flag} x=${p}/>${p.nick}</span>`)}</span>`:html`<span class="tal-g"><${TeamLogo} x=${x} s=${84}/></span>`}<span class="tal-f">${sub}${g.grp?(sub?' · ':'')+t('group')+' '+g.grp:''}</span></a>`})}</div></div><//>`};

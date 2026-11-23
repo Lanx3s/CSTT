@@ -25,7 +25,7 @@ export const artBg=(col,seed='',style='')=>{
   else if(st==='cross'){for(let x=30;x<W;x+=60)for(let y=30;y<H;y+=60){const o=(.07+r()*.12).toFixed(2);p+=`<path d="M${x-6} ${y}H${x+6}M${x} ${y-6}V${y+6}" stroke="${c}" stroke-opacity="${o}" stroke-width="2"/>`}}
   else{for(let i=0;i<4;i++)p+=`<circle cx="${n(r()*W)}" cy="${n(r()*H)}" r="${n(120+r()*160)}" fill="url(#m${i})"/>`}
   const defs=st==='mesh'?[0,1,2,3].map(i=>`<radialGradient id="m${i}"><stop offset="0" stop-color="${c}" stop-opacity="${(.3-i*.04).toFixed(2)}"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`).join(''):'';
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c}" stop-opacity=".5"/><stop offset=".65" stop-color="#0c0e12" stop-opacity="0"/></linearGradient>${defs}</defs><rect width="${W}" height="${H}" fill="#0b0d11"/><rect width="${W}" height="${H}" fill="url(#g)"/>${p}</svg>`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c}" stop-opacity=".5"/><stop offset=".65" stop-color="#0c0e12" stop-opacity="0"/></linearGradient>${defs}</defs><rect width="${W}" height="${H}" fill="#0b0d11"/><rect width="${W}" height="${H}" fill="${c}" fill-opacity=".14"/>${p}</svg>`;
   return 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")'};
 
 /* ---------- флаги ---------- */
@@ -133,7 +133,7 @@ export const NewsRow=({n})=>html`<a class="nrow" href=${'#/news/'+n.id}><${NewsT
 export const NewsMini=({n})=>html`<a class="nmini" href=${'#/news/'+n.id}><span class="ntag" style=${{background:n.c}}>${n.tag}</span><span>${L(n.ti)}</span><small>${n.d}</small></a>`;
 
 /* ---------- игроки ---------- */
-export const PlayerPic=({p,cls=''})=>p.photo?html`<img class=${'ppic '+cls} src=${p.photo} alt="" loading="lazy"/>`:html`<span class=${'ppic ph '+cls}>${(p.nick||'?').slice(0,2).toUpperCase()}</span>`;
+export const PlayerPic=({p,cls=''})=>html`<img class=${'ppic '+cls} src=${p.photo||(import.meta.env.BASE_URL+'avatar.png')} alt="" loading="lazy"/>`;
 export const PlayerCard=({p,nr})=>html`<a class="pcard" href=${'#/player/'+p.id}><${PlayerPic} p=${p}/><span class="pc-i"><b><${Flag} x=${p}/> ${p.nick}</b><small>${p.name||p.role||''}</small></span><${Rt} v=${p.rt}/></a>`;
 
 /* таблица игроков */

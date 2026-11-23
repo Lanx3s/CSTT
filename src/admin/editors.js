@@ -80,3 +80,10 @@ ${pv?html`<div class="pvw"><${Md} text=${v}/></div>`:html`<textarea ref=${ref} r
 <div class="tb emb"><span>Вставить карточку:</span><select value=${et} onChange=${e=>{se(e.target.value);sei('')}}><option value="match">Матч</option><option value="team">Команда</option><option value="player">Игрок</option><option value="tour">Турнир</option><option value="news">Новость</option></select>
 <select value=${ei} onChange=${e=>sei(e.target.value)}><option value="">Выберите…</option>${opts[et].map(([a,b])=>html`<option key=${a} value=${a}>${b}</option>`)}</select><button type="button" disabled=${!ei} onClick=${()=>{blk('[['+et+':'+ei+']]');sei('')}}>Вставить</button>
 <button type="button" onClick=${()=>{const id=prompt('ID видео YouTube (например dQw4w9WgXcQ)');if(id)blk('[[yt:'+id.trim()+']]')}}>▶ YouTube</button></div></div>`};
+
+/* ---- палитра цвета фона за фото игрока ---- */
+export const PALETTE=['#3f9b52','#1f9d8f','#1c8fb5','#2f6fd0','#4a55d0','#8a4fd0','#c04fb0','#d04f7f','#d03f3f','#e0702f','#e0a82f','#c9c93a','#8fc83a','#5a6a82','#3d4658','#8a5a3a','#c8d0dc','#15181e'];
+export const PalSel=({v,set})=>{
+  const cur=/^#[0-9a-f]{6}$/i.test(v||'')?v.toLowerCase():'';
+  return html`<div class="pal"><div class="pal-g">${PALETTE.map(c=>html`<button type="button" key=${c} class=${'pal-s'+(cur===c?' on':'')} style=${{background:c}} title=${c} onClick=${()=>set(c)}></button>`)}</div>
+<div class="pal-r"><input type="color" value=${cur||'#3f9b52'} onChange=${e=>set(e.target.value)}/><input class="sm" placeholder="#3f9b52" value=${v||''} onChange=${e=>set(e.target.value.trim())}/><button type="button" class="b g" onClick=${()=>set('')}>Сбросить</button><span class="pal-p" style=${{background:cur?`radial-gradient(120% 90% at 50% 25%,${cur},#0d1117 78%)`:'#0d1117'}}></span></div></div>`};

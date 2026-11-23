@@ -6,6 +6,7 @@ import {tourTeams,playerAgg,mapStats,byTime,byRecent,f2,f1,phases} from '../lib/
 import {Box,Rows,Row,TeamLogo,TeamLink,Bm,Empty,Tabs,Rt,Flag,MapTile,Chip,TourLogo,tourStyle,stLabel,Ico,NewsRow,mapInfo} from '../components/common.js';
 import {Bracket} from '../components/Brackets.js';
 import {Md} from '../components/Md.js';
+import {TeamsAttending} from '../components/Extra.js';
 
 const medal=i=>['trophy','medal','medal'][i]||null;
 const MapPool=({o,full})=>{
@@ -24,7 +25,8 @@ const Overview=({o,ms})=>{
   return html`<div class="g2w"><div class="col">
 <${Box} h=${t('info')}><table class="tbl ib"><tbody>${info.map(([a,b])=>html`<tr key=${a}><td>${a}</td><td><b>${b}</b></td></tr>`)}</tbody></table>${L(o.ds)&&html`<div class="in desc">${L(o.ds)}</div>`}<//>
 ${o.prizes.length>0&&html`<${Box} h=${t('prizes')}><table class="tbl prz"><tbody>${o.prizes.map((r,i)=>html`<tr key=${i}><td class="pl">${medal(i)?html`<span class=${'md m'+i}><${Ico} n=${medal(i)} s=${16}/></span>`:null}${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]&&(team(+r[2]).tbd?r[2]:html`<${TeamLink} id=${+r[2]} s=${18}/>`)}</td></tr>`)}</tbody></table><//>`}
-${o.pool.length>0&&html`<${Box} h=${t('mappool')}><div class="in"><${MapPool} o=${o}/></div><//>`}</div>
+${o.pool.length>0&&html`<${Box} h=${t('mappool')}><div class="in"><${MapPool} o=${o}/></div><//>`}
+${teams.length>0&&html`<${TeamsAttending} o=${o} teams=${teams}/>`}</div>
 <aside>${lv.length>0&&html`<${Box} h=${t('live')+' / '+t('upc')}><div class="mlist">${lv.slice(0,6).map(m=>html`<${Bm} key=${m.id} m=${m}/>`)}</div><//>`}
 ${fin.length>0&&html`<${Box} h=${t('res')}><div class="mlist">${fin.slice(0,6).map(m=>html`<${Bm} key=${m.id} m=${m}/>`)}</div><//>`}
 ${top.length>0&&html`<${Box} h=${t('top')}>${top.map((r,i)=>html`<a class="tp1" key=${r.p.id} href=${'#/player/'+r.p.id}><span class="mu">${i+1}</span><${Flag} x=${r.p}/><b>${r.p.nick}</b><span class="mu">${pteam(r.p).tag}</span><${Rt} v=${r.rt}/></a>`)}<//>`}
@@ -43,7 +45,7 @@ export const Tour=({id,tab:tab0})=>{
     overview:html`<${Overview} o=${o} ms=${ms}/>`,
     bracket:html`<${Box} h=${t('bracket')}><div class="in"><${Bracket} tid=${o.id}/></div><//>`,
     matches:html`<div class="col"><${Box} h=${t('live')+' / '+t('upc')}><${ByDate} list=${ms.filter(m=>m.st!=='fin').sort(byTime)}/><//><${Box} h=${t('res')}><${ByDate} list=${ms.filter(m=>m.st==='fin').sort(byRecent)}/><//></div>`,
-    part:html`<${Box} h=${t('part')}>${teams.length?html`<div class="cards">${teams.map(x=>{const g=grpOf.get(x.id);return html`<a class="card" key=${x.id} href=${'#/team/'+x.id}><${TeamLogo} x=${x} s=${56}/><span class="ci"><b>${x.name}</b><span class="mu"><${Flag} x=${x}/> #${x.rank}${g&&g.grp?' · '+t('group')+' '+g.grp:''}${g&&g.seed?' · seed '+g.seed:''}</span><span class="nicks">${x.pl.map(p=>p.nick).join(', ')}</span></span></a>`})}</div>`:html`<${Empty}/>`}<//>`,
+    part:html`<${TeamsAttending} o=${o} teams=${teams}/>`,
     mappool:html`<${Box} h=${t('mappool')}><div class="in"><${MapPool} o=${o} full=${1}/></div><//>`,
     stats:html`<${Box} h=${t('stats')}>${lb.length?html`<table class="tbl"><thead><tr><th class="num">#</th><th>${t('players')}</th><th>${t('team')}</th><th class="num">${t('maps')}</th><th class="num">K-D</th><th class="num">ADR</th><th class="num">KAST</th><th class="num">Rating</th></tr></thead><tbody>${lb.map((r,i)=>html`<tr key=${r.p.id}><td class="num mu">${i+1}</td><td><a class="plk" href=${'#/player/'+r.p.id}><${Flag} x=${r.p}/><b>${r.p.nick}</b></a></td><td><${TeamLink} id=${r.p.team} s=${18}/></td><td class="num">${r.n}</td><td class="num">${r.k}-${r.d}</td><td class="num">${f1(r.adr)}</td><td class="num">${r.kast?Math.round(r.kast)+'%':'–'}</td><td class="num"><${Rt} v=${r.rt}/></td></tr>`)}</tbody></table>`:html`<${Empty}/>`}<//>`,
     news:html`<${Box} h=${t('news')}>${nw.map(n=>html`<${NewsRow} key=${n.id} n=${n}/>`)}<//>`,

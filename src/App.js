@@ -8,6 +8,7 @@ import {TeamLogo} from './components/common.js';
 import {SearchBox} from './components/SearchBox.js';
 import LOGO from './assets/logo.png';
 import {Login,Profile} from './pages/Account.js';
+import {User,Users} from './pages/User.js';
 import {Home} from './pages/Home.js';
 import {News,NewsPost} from './pages/News.js';
 import {Match} from './pages/Match.js';
@@ -26,7 +27,7 @@ import {GrandFinal,Socials} from './components/Extra.js';
 import {Admin} from './admin/Admin.js';
 
 const parse=()=>location.hash.replace(/^#\/?/,'').split('/');
-const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,login:Login,profile:Profile};
+const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,login:Login,profile:Profile,user:User,users:Users};
 
 const Ticker=()=>{
   const live=MS.filter(m=>m.st==='live'),up=MS.filter(m=>m.st==='up').sort(byTime).slice(0,8),fin=MS.filter(m=>m.st==='fin').sort(byRecent).slice(0,6);
