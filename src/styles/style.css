@@ -696,3 +696,90 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 .hxp-st{position:static;transform:none;margin-top:8px;background:#6b87b0;box-shadow:none;padding:6px 20px;font-size:13px}
 .hxp-st:hover{background:var(--r)}
 .hxp:after{background:linear-gradient(0deg,rgba(24,34,48,.62) 0,rgba(24,34,48,.3) 55%,transparent 100%)}
+
+/* ===== v6.2: ветки ответов на форуме ===== */
+.tn-root{padding:10px 12px 14px;display:flex;flex-direction:column;gap:8px}
+.tn-c{background:var(--p2);border:1px solid var(--ln);border-radius:var(--rad);overflow:hidden}
+.tn-h{display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--ln);font-size:12px}
+.tn-no{color:var(--mu);font-weight:700;margin-right:2px}.tn-d{margin-left:auto;font-size:11px}
+.tn-t{padding:10px 12px;font-size:13px;line-height:1.5}
+.tn-f{display:flex;gap:16px;align-items:center;padding:6px 12px 8px;font-size:12px;border-top:1px solid var(--ln)}.tn-del{margin-left:auto;color:var(--mu)}.tn-del:hover{color:#ff6b6b}
+.tn-tg{color:#aab6c8}
+.tn-form{display:flex;flex-direction:column;gap:8px;padding:0 12px 12px}.tn-form textarea{background:var(--p);border:1px solid var(--ln);border-radius:var(--rad);color:#fff;padding:9px 11px;font:13px var(--font);resize:vertical;outline:0}.tn-form textarea:focus{border-color:var(--r)}.tn-form .on{align-self:flex-start}
+.tn-k{margin:8px 0 0 16px;padding-left:14px;border-left:2px solid var(--ln);display:flex;flex-direction:column;gap:8px}
+.tn.tn-s>.tn-c{background:color-mix(in srgb,var(--p2) 70%,var(--p))}
+.tn-k .tn-k{margin-left:10px}
+@media(max-width:600px){.tn-k{margin-left:6px;padding-left:9px}}
+/* v6.2: основной фон — на выбор, полосы — цвет команды / палитра */
+.hxp.bg{background:linear-gradient(180deg,var(--b1,#262a33) 0%,color-mix(in srgb,var(--b1,#262a33) 45%,var(--b2,#12151a)) 55%,var(--b2,#12151a) 100%)}
+.hxp-ic{width:36px;align-items:center;gap:14px}
+.hxp-i{width:36px;display:flex;align-items:center;justify-content:center}
+.hxp-i.fl .flag{width:34px;height:23px}
+.hxp-i .ico{width:24px;height:24px;display:block;color:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.hxp-i.lg .tlg{margin:0}
+
+/* v6.2: карточки участников — аккуратнее */
+.tal{grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:12px}
+.tal-c{padding:0 0 10px;min-height:0;height:196px;justify-content:flex-start;overflow:hidden;background:linear-gradient(180deg,#1b2029,var(--p));border:1px solid var(--ln)}
+.tal-top{display:flex;justify-content:space-between;width:100%;min-height:22px}
+.tal-r,.tal-s{position:static;font-style:normal;font:700 11px var(--font);padding:4px 9px;color:#fff;border-radius:0}
+.tal-r{background:#5d7396;border-radius:var(--rad) 0 6px 0}.tal-s{background:#e8a317;color:#1a1204;border-radius:0 var(--rad) 0 6px}
+.tal-n{margin:8px 10px 0;font-size:13px;line-height:1.25;height:32px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;overflow-wrap:anywhere;width:calc(100% - 20px)}
+.tal-g{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.tal-l{flex:1;display:flex;flex-direction:column;gap:5px;justify-content:center;font-size:12px;padding:6px 0 0 18px;width:100%;box-sizing:border-box}
+.tal-f{font-size:11px;color:#8d9aae;min-height:15px;padding:0 8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;box-sizing:border-box}
+.tal-c.tbd{opacity:.55;border-style:dashed;cursor:default}.tal-c.tbd:hover{transform:none;border-color:var(--ln)}.tal-c.tbd .tal-r{background:#3b4558}
+.tal-q{width:64px;height:64px;border-radius:50%;border:2px dashed #4a566b;display:flex;align-items:center;justify-content:center;font:700 26px var(--font);color:#4a566b}
+/* v6.2: сравнение команд — значения по центру своей половины */
+.cmp-r{grid-template-columns:1fr 150px 1fr!important;gap:8px!important;text-align:center}
+.cmp-r>b{justify-self:center;text-align:center;min-width:60px}
+.cmp-r>span{justify-self:center;text-align:center}
+.cmp-r>.l,.cmp-r>.r{display:flex;justify-content:center;text-align:center}
+.cmp-r .form{display:inline-flex;justify-content:center;gap:4px}
+.cmp-h{display:grid!important;grid-template-columns:1fr 150px 1fr;align-items:center;padding:0 0 6px}
+.cmp-h span:first-child{justify-content:flex-start}.cmp-h span:last-child{justify-content:flex-end;grid-column:3}
+
+/* ===== v6.2: Составы и сравнение игроков (как Lineups на HLTV) ===== */
+.lu2{padding:12px;display:flex;flex-direction:column;gap:12px}
+.lu2-t{background:#1a1f28;border:1px solid var(--ln);border-radius:var(--rad);overflow:hidden}
+.lu2-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:#242b37;border-bottom:1px solid var(--ln)}
+.lu2-n{display:flex;align-items:center;gap:9px;color:#fff;font-size:14px;min-width:0}a.lu2-n:hover b{color:var(--r)}.lu2-n b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lu2-rk{background:#5d7396;color:#fff;font:700 11px var(--font);padding:3px 9px;border-radius:3px;white-space:nowrap}
+.lu2-pl{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px}
+.lu2-p{background:none;border:0;padding:0;cursor:pointer;color:var(--tx);display:flex;flex-direction:column;border-radius:var(--rad);overflow:hidden;font:inherit}
+.lu2-ph{position:relative;aspect-ratio:3/4;background:linear-gradient(180deg,#3a4558,#1c222c);display:block;overflow:hidden;border-radius:var(--rad) var(--rad) 0 0}
+.lu2-ph .ppic{width:100%;height:100%;border-radius:0;object-position:center top;font-size:26px;background:transparent}
+.lu2-ph i{position:absolute;top:5px;left:5px;width:20px;height:20px;border-radius:4px;background:#4a8fe0;display:flex;align-items:center;justify-content:center;color:#fff}
+.lu2-nk{display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 4px;background:#2c3544;font-size:12px;font-weight:700;color:#e6ecf5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0 0 var(--rad) var(--rad)}
+.lu2-p:hover .lu2-nk{background:#38445a}.lu2-p.on .lu2-nk{background:#5d7396;color:#fff}.lu2-p.on .lu2-ph{box-shadow:inset 0 0 0 2px #5d7396}
+.lu2-e{padding:14px;grid-column:1/-1;text-align:center}
+.lu2-hl{display:grid;grid-template-columns:minmax(120px,1fr) minmax(220px,1.4fr) minmax(120px,1fr);gap:10px;align-items:end;background:linear-gradient(180deg,#232b38,#171c25);border:1px solid var(--ln);border-radius:var(--rad);padding:12px}
+.lu2-b{display:flex;flex-direction:column;align-items:center;gap:8px}.lu2-bp{display:block;width:100%;max-width:170px;aspect-ratio:3/4;border-radius:var(--rad);overflow:hidden;background:linear-gradient(180deg,#3a4558,#1c222c)}
+.lu2-bp .ppic{width:100%;height:100%;border-radius:0;object-position:center top;font-size:34px;background:transparent}
+.lu2-btn{background:#5d7396;color:#fff;font:700 11px var(--font);padding:5px 12px;border-radius:4px;white-space:nowrap}.lu2-btn:hover{background:var(--r);color:#fff}
+.lu2-st{display:flex;flex-direction:column;align-items:stretch;align-self:stretch;justify-content:center}
+.lu2-st h4{margin:0;text-align:center;font-size:13px;text-transform:uppercase;letter-spacing:.5px}.lu2-st>small{text-align:center;color:var(--mu);font-size:10px;margin-bottom:8px}
+.lu2-r{display:grid;grid-template-columns:1fr 1.6fr 1fr;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);text-align:center;font-size:13px}
+.lu2-r>b{font-weight:600;color:#aab6c8}.lu2-r>b.best{color:#fff;font-weight:800}.lu2-r>span{font-size:10px;text-transform:uppercase;color:var(--mu);letter-spacing:.4px}
+.lu2-who{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;font-weight:700}.lu2-who a{color:#fff}.lu2-who a:hover{color:var(--r)}.lu2-who span{color:var(--mu);font-weight:400}
+@media(max-width:720px){.lu2-pl{grid-template-columns:repeat(5,minmax(62px,1fr));overflow-x:auto}.lu2-hl{grid-template-columns:1fr 1fr}.lu2-st{grid-column:1/-1;order:3}}
+.lu2-pl{grid-template-columns:repeat(5,minmax(0,150px));justify-content:center}@media(max-width:720px){.lu2-pl{grid-template-columns:repeat(5,minmax(70px,1fr));justify-content:start}}
+
+.phs-h,.phs-r{grid-template-columns:minmax(160px,230px) 130px 1fr 90px}
+.phs-d{font-size:12px;color:var(--mu)}.phs-r.cur .phs-d{color:#c4cfdf}
+@media(max-width:700px){.phs-r{grid-template-columns:1fr auto}.phs-d{grid-column:1}.phs-tr{grid-column:1/-1}}
+
+/* ===== v6.2: Статистика — лидеры по категориям (как на HLTV) ===== */
+.stg2{display:grid;grid-template-columns:1fr 1fr;gap:18px 18px}
+.stc h4{margin:0 0 6px;font-size:12px;color:#c4cfdf;text-transform:uppercase;letter-spacing:.5px}
+.stc-box{background:var(--p);border:1px solid var(--ln);border-radius:var(--rad);overflow:hidden}
+.stc-top{position:relative;display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;background:linear-gradient(90deg,#252c39,#1b2029);border-bottom:1px solid var(--ln);color:#fff;overflow:hidden}
+.stc-top .ppic{width:64px;height:74px;border-radius:var(--rad);object-fit:cover;object-position:center top;background:linear-gradient(180deg,#3a4558,#1c222c);flex:none;font-size:20px}
+.stc-i{display:flex;flex-direction:column;min-width:0;flex:1;z-index:1}.stc-i small{color:#9aa7bb;font-size:12px;margin-top:2px}
+.stc-n{display:flex;align-items:center;gap:7px;min-width:0}.stc-n b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stc-n small{color:#9aa7bb;font-size:12px;white-space:nowrap}
+.stc-top .stc-n b{font-size:16px}
+.stc-v{font-size:18px;font-weight:800;z-index:1}.stc-r .stc-v{font-size:14px;font-weight:700;color:#d6deea}
+.stc-wm{position:absolute;right:56px;top:50%;transform:translateY(-50%);opacity:.12;pointer-events:none}
+.stc-r{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px;border-top:1px solid var(--ln);color:#e1e8f2;font-size:13px}.stc-r:first-of-type{border-top:0}
+.stc-top:hover,.stc-r:hover{background:#2a3342;color:#fff}.stc-top:hover b:first-of-type,.stc-r:hover .stc-n b{color:var(--r)}
+@media(max-width:760px){.stg2{grid-template-columns:1fr}}

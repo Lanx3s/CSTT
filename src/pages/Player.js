@@ -21,7 +21,7 @@ export const Player=({id})=>{
 <div class="pp-i"><div class="pf-h"><div class="pf-t"><div class="pf-c"><${Flag} x=${p}/><span>${p.cc}</span></div><h1>${p.nick}</h1>${p.name&&html`<p class="slg">${p.name}</p>`}</div>
 <div class="pf-a">${soc.length>0&&html`<div class="soc">${soc.map(([k,l,c])=>html`<a key=${k} class=${'sob '+c} href=${p[k]} target="_blank" rel="noreferrer">${l}</a>`)}</div>`}</div></div>
 <div class="pf-rows"><${Row2} l=${t('team')}>${T.tbd?html`<span class="mu">${T.name}</span>`:html`<a class="tlk" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${20}/><span class="tn">${T.name}</span></a>`}<//>
-${p.prev&&html`<${Row2} l=${t('prevTeams')}>${p.prev}<//>`}${p.role&&html`<${Row2} l=${t('role')}>${p.role}<//>`}${p.age>0&&html`<${Row2} l=${t('ageL')}>${p.age}<//>`}${p.since&&html`<${Row2} l=${t('inTeamSince')}>${p.since}<//>`}
+${p.role&&html`<${Row2} l=${t('role')}>${p.role}<//>`}${p.age>0&&html`<${Row2} l=${t('ageL')}>${p.age}<//>`}${p.since&&html`<${Row2} l=${t('inTeamSince')}>${p.since}<//>`}
 <${Row2} l=${t('avgRt')}><${Rt} v=${p.rt}/><//>${mine.length>0&&html`<${Row2} l=${t('bestMatch')}><${Rt} v=${best}/><//>`}</div>
 <${AchStrip} items=${[]} trophies=${tr}/></div></section>
 ${ti.length>0&&html`<div class="plates">${ti.map(y=>html`<${Plate} key=${y.id} x=${y}/>`)}</div>`}

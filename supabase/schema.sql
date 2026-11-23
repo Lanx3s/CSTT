@@ -227,3 +227,8 @@ alter table players add column if not exists bgm text;
 alter table players add column if not exists bgc text;
 alter table players add column if not exists bgp text;
 alter table site add column if not exists pbg text;
+
+/* --- v6.2: ветки ответов на форуме, даты в истории команд --- */
+alter table forum_posts add column if not exists parent bigint references forum_posts(id) on delete cascade;
+alter table phist add column if not exists dates text;
+alter table players add column if not exists bgb text;

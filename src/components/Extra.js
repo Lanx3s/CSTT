@@ -1,7 +1,7 @@
 /* Соцсети, плашка гранд-финала на главной, составы и сравнение игроков в матче */
 import {html,F} from '../lib/html.js';
 import {useState} from 'react';
-import {MS,SITE,TEAMS as _TM,team,tour,pteam,PH,TROPH,TT} from '../lib/data.js';
+import {MS,SITE,team,tour,pteam,PH,TROPH,TT} from '../lib/data.js';
 import {t,lang} from '../lib/i18n.js';
 import {byTime,f2,f1} from '../lib/calc.js';
 import {Box,TeamLogo,Flag,PlayerPic,Rt,Empty,Hex,Ico} from './common.js';
@@ -37,16 +37,26 @@ export const GrandFinal=()=>{
 
 /* ---------- составы и сравнение игроков ---------- */
 const rosterOf=id=>{const T=team(id);return T.tbd?[]:[...T.pl].sort((a,b)=>b.rt-a.rt).slice(0,7)};
+const RBX={IGL:'crown',AWPer:'target',AWP:'target',Entry:'bolt',Support:'shield',Lurker:'skull'};
+const STAT_ROWS=[['rt','Rating',f2,1],['kpr',lang==='ru'?'Убийств за раунд':'Kills per round',f2,1],['dpr',lang==='ru'?'Смертей за раунд':'Deaths per round',f2,-1],['kast','KAST',v=>f1(v)+'%',1],['imp',lang==='ru'?'Импакт':'Impact',f2,1],['kd','K/D',f2,1],['adr',lang==='ru'?'Средний урон за раунд':'Average damage per round',f1,1],['hs','HS%',v=>Math.round(v)+'%',1]];
+const LuTeam=({T,sel,on})=>{
+  const l=rosterOf(T.id),ru=lang==='ru';
+  return html`<div class="lu2-t"><div class="lu2-h">${T.tbd?html`<span class="lu2-n"><${TeamLogo} x=${T} s=${24}/><b>${T.name}</b></span>`:html`<a class="lu2-n" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${24}/><b>${T.name}</b></a>`}${!T.tbd&&html`<span class="lu2-rk">CSTT: #${T.rank}</span>`}</div>
+<div class="lu2-pl">${l.slice(0,5).map(p=>html`<button type="button" key=${p.id} class=${'lu2-p'+(sel===p.id?' on':'')} onClick=${()=>on(p.id)}><span class="lu2-ph"><${PlayerPic} p=${p}/>${RBX[p.role]&&html`<i title=${p.role}><${Ico} n=${RBX[p.role]} s=${12}/></i>`}</span><span class="lu2-nk"><${Flag} x=${p}/>${p.nick}</span></button>`)}${!l.length&&html`<div class="lu2-e mu">${ru?'Состав не указан':'No lineup'}</div>`}</div></div>`};
 export const Lineups=({m})=>{
-  const A=team(m.a),B=team(m.b),la=rosterOf(m.a),lb=rosterOf(m.b);
+  const A=team(m.a),B=team(m.b),la=rosterOf(m.a),lb=rosterOf(m.b),ru=lang==='ru';
+  const [sa,ssa]=useState(null),[sb2,ssb]=useState(null);
   if(!la.length&&!lb.length)return null;
-  const col=(T,l,r)=>html`<div class=${'lu-c'+(r?' r':'')}><a class="lu-h" href=${T.tbd?null:'#/team/'+T.id}><${TeamLogo} x=${T} s=${28}/><b>${T.name}</b></a>${l.map(p=>html`<a class="lu-p" key=${p.id} href=${'#/player/'+p.id}><${PlayerPic} p=${p}/><span class="lu-n"><b><${Flag} x=${p}/> ${p.nick}</b><small>${p.role||p.name||''}</small></span><${Rt} v=${p.rt}/></a>`)}${!l.length&&html`<${Empty}/>`}</div>`;
-  const n=Math.max(la.length,lb.length),rows=[...Array(n)].map((_,i)=>[la[i],lb[i]]);
-  const cmp=(a,b,k,fm)=>{const x=a?a[k]:null,y=b?b[k]:null;return [x==null?'–':fm(x),y==null?'–':fm(y),x!=null&&y!=null&&x>y?'a':x!=null&&y!=null&&x<y?'b':'']};
-  const M=[['rt','Rating',f2],['kd','K/D',f2],['adr','ADR',f1],['kast','KAST',v=>v+'%']];
-  return html`<${F}><${Box} h=${t('lineups')}><div class="lu">${col(A,la)}${col(B,lb,1)}</div><//>
-<${Box} h=${t('plCmp')}><div class="pcmp"><div class="pc-hd"><span>${A.tag}</span>${M.map(r=>html`<em key=${r[0]}>${r[1]}</em>`)}<span class="r">${B.tag}</span></div>
-${rows.map(([a,b],i)=>html`<div class="pc-r" key=${i}><span class="pn">${a?html`<a href=${'#/player/'+a.id}>${a.nick}</a>`:'—'}</span><div class="pc-m">${M.map(([k,l,fm])=>{const c=cmp(a,b,k,fm);return html`<div key=${k}><b class=${c[2]==='a'?'best':''}>${c[0]}</b><i>${l}</i><b class=${c[2]==='b'?'best':''}>${c[1]}</b></div>`})}</div><span class="pn r">${b?html`<a href=${'#/player/'+b.id}>${b.nick}</a>`:'—'}</span></div>`)}</div><//><//>`};
+  const pa=la.find(x=>x.id===sa)||la[0],pb=lb.find(x=>x.id===sb2)||lb[0];
+  const rows=STAT_ROWS.filter(([k])=>(pa&&pa[k])||(pb&&pb[k]));
+  const big=(p,r)=>p?html`<div class=${'lu2-b'+(r?' r':'')}><a href=${'#/player/'+p.id} class="lu2-bp"><${PlayerPic} p=${p}/></a><a class="lu2-btn" href=${'#/player/'+p.id}>${ru?'Профиль игрока':'Player profile'}</a></div>`:html`<div class="lu2-b"></div>`;
+  const val=(p,k,fm)=>p&&p[k]?fm(p[k]):'–';
+  const best=(k,dir)=>{const x=pa?pa[k]:0,y=pb?pb[k]:0;return !x||!y||x===y?'':((x-y)*dir>0?'a':'b')};
+  return html`<${Box} h=${t('lineups')}><div class="lu2"><${LuTeam} T=${A} sel=${pa&&pa.id} on=${ssa}/>
+<div class="lu2-hl">${big(pa)}<div class="lu2-st"><h4>${ru?'Сравнение игроков':'Highlighted stats'}</h4><small>${ru?'за всё время на сайте':'all-time on site'}</small>
+${rows.map(([k,l,fm,dir])=>{const c=best(k,dir);return html`<div class="lu2-r" key=${k}><b class=${c==='a'?'best':''}>${val(pa,k,fm)}</b><span>${l}</span><b class=${c==='b'?'best':''}>${val(pb,k,fm)}</b></div>`})}
+<div class="lu2-who"><a href=${pa?'#/player/'+pa.id:null}>${pa?pa.nick:''}</a><span>vs</span><a href=${pb?'#/player/'+pb.id:null}>${pb?pb.nick:''}</a></div></div>${big(pb,1)}</div>
+<${LuTeam} T=${B} sel=${pb&&pb.id} on=${ssb}/></div><//>`};
 
 /* информация о матче */
 export const MatchInfo=({m})=>{
@@ -60,35 +70,31 @@ export const playerBg=p=>{
   if(m==='none')return null;
   const c=m==='color'&&/^#[0-9a-f]{6}$/i.test(p.bgc||'')?p.bgc:(pteam(p).col||'#3f9b52');
   return /^#[0-9a-f]{3,8}$/i.test(c)?c:'#3f9b52'};
+export const PBASE={'':['#262a33','#12151a'],graphite:['#262a33','#12151a'],slate:['#43404f','#28394c'],navy:['#24324a','#101a2c'],wine:['#3d2631','#1a1017'],forest:['#223a30','#0f1a16'],violet:['#382f52','#171226'],black:['#1b1d22','#08090b']};
 export const PlayerHero=({p,role})=>{
   const c=playerBg(p),T=pteam(p),ru=lang==='ru';
-  const goStats=()=>{const e=document.querySelector('.stts');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})};
   const sub=[p.name,p.age>0&&p.age+(ru?' лет':' years')].filter(Boolean).join(' · ');
-  return html`<div class=${'hxp'+(c?' bg':'')+(c&&p.bgp==='none'?' np':'')+(c&&p.bgp==='dots'?' dt':'')} style=${c?{'--pc':c}:null}>
+  return html`<div class=${'hxp'+(c?' bg':'')+(c&&p.bgp==='none'?' np':'')+(c&&p.bgp==='dots'?' dt':'')} style=${c?{'--pc':c,'--b1':(PBASE[p.bgb]||PBASE['']) [0],'--b2':(PBASE[p.bgb]||PBASE[''])[1]}:null}>
 <div class="hxp-ic">${p.cc&&html`<span class="hxp-i fl"><${Flag} x=${p}/></span>`}${!T.tbd&&html`<a class="hxp-i lg" href=${'#/team/'+T.id} title=${T.name}><${TeamLogo} x=${T} s=${34}/></a>`}${role}</div>
 <${PlayerPic} p=${p} cls="xl"/>
-<div class="hxp-nm"><b>${p.nick}</b>${sub&&html`<small>${sub}</small>`}<button class="hxp-st" onClick=${goStats}>${ru?'Статистика игрока':'Player stats'}</button></div></div>`};
+<div class="hxp-nm"><b>${p.nick}</b>${sub&&html`<small>${sub}</small>`}</div></div>`};
 
 /* ---------- плашка «История команд и достижения» (без дат) ---------- */
 export const PlayerHistory=({p})=>{
   const ru=lang==='ru';
-  let rows=PH.filter(x=>x.player===p.id&&!x.hide);
-  if(!rows.length){ /* если админ ничего не настраивал — собираем из текущей команды и поля «Прошлые команды» */
-    const cur=p.team!=null?[{id:'c',team:p.team,name:'',cur:true}]:[];
-    const old=(p.prev||'').split(/[,;]+/).map(x=>x.trim()).filter(Boolean).map((n,i)=>({id:'o'+i,team:null,name:n,cur:false}));
-    rows=[...cur,...old].map(r=>{if(r.team==null&&r.name){const f=team_by_name(r.name);if(f)return {...r,team:f.id}}return r})}
+  let rows=PH.filter(x=>x.player===p.id&&x.team!=null&&!x.hide).map(x=>({id:x.id,team:x.team,dates:x.dates,cur:x.team===p.team}));
+  if(p.team!=null&&!rows.some(r=>r.team===p.team))rows=[{id:'cur',team:p.team,dates:'',cur:true},...rows];
   if(!rows.length)return null;
-  const trs=r=>r.team==null?[]:TROPH.filter(y=>y.team===r.team&&(y.pl.length?y.pl.includes(p.id):r.cur));
-  return html`<${Box} h=${ru?'История команд и достижения':'Team history & achievements'} cls="phs"><div class="phs-h"><span>${ru?'Команда':'Team'}</span><span>${ru?'Трофеи':'Trophies'}</span></div>
-${rows.map(r=>{const T=r.team!=null?team(r.team):null,tr=trs(r),nm=T?T.name:r.name,logo=T?html`<${TeamLogo} x=${T} s=${28}/>`:r.logo?html`<img class="phl" src=${r.logo} alt=""/>`:html`<span class="phl ph">${(nm||'?').slice(0,2).toUpperCase()}</span>`;
-  const left=T&&!T.tbd?html`<a class="phs-t" href=${'#/team/'+T.id}>${logo}<b>${nm}</b></a>`:html`<span class="phs-t">${logo}<b>${nm}</b></span>`;
-  return html`<div class=${'phs-r'+(r.cur?' cur':'')} key=${r.id}>${left}<div class="phs-tr">${tr.map(y=>{const o=y.tour!=null?tour(y.tour):null,tip=[y.title,y.place,y.year].filter(Boolean).join(' · ');return o?html`<a key=${y.id} href=${'#/tournament/'+o.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></a>`:html`<span key=${y.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></span>`})}</div>${T&&!T.tbd&&html`<a class="phs-b" href=${'#/team/'+T.id}>${ru?'Команда':'Team'}</a>`}</div>`})}<//>`};
-const team_by_name=n=>_TM.find(x=>(x.name||'').toLowerCase()===n.toLowerCase()||(x.tag||'').toLowerCase()===n.toLowerCase());
+  const trs=r=>TROPH.filter(y=>y.team===r.team&&(y.pl.length?y.pl.includes(p.id):r.cur));
+  return html`<${Box} h=${ru?'История команд':'Team history'} cls="phs"><div class="phs-h"><span>${ru?'Команда':'Team'}</span><span>${ru?'Период':'Period'}</span><span>${ru?'Трофеи':'Trophies'}</span><span></span></div>
+${rows.map(r=>{const T=team(r.team),tr=trs(r);
+  return html`<div class=${'phs-r'+(r.cur?' cur':'')} key=${r.id}><a class="phs-t" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${28}/><b>${T.name}</b></a><span class="phs-d">${r.dates||'—'}</span><div class="phs-tr">${tr.map(y=>{const o=y.tour!=null?tour(y.tour):null,tip=[y.title,y.place,y.year].filter(Boolean).join(' · ');return o?html`<a key=${y.id} href=${'#/tournament/'+o.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></a>`:html`<span key=${y.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></span>`})}</div><a class="phs-b" href=${'#/team/'+T.id}>${ru?'Команда':'Team'}</a></div>`})}<//>`};
 
 /* ---------- список команд турнира (как «Teams attending» на HLTV) ---------- */
 export const TeamsAttending=({o,teams})=>{
-  const ru=lang==='ru',[lu,sl]=useState(false);
-  if(!teams.length)return html`<${Empty}/>`;
+  const ru=lang==='ru',[lu,sl]=useState(false),tbd=Math.max(0,Math.min(64,(o.tn||0)-teams.length));
+  if(!teams.length&&!tbd)return html`<${Empty}/>`;
   const tt=new Map(TT.filter(x=>x.tour==o.id).map(x=>[x.team,x]));
-  return html`<${Box} h=${ru?'Участники':'Teams attending'} right=${html`<button class="tal-b" onClick=${()=>sl(!lu)}>${lu?(ru?'Скрыть составы':'Hide lineups'):(ru?'Показать составы':'Show lineups')}</button>`}><div class="in"><div class="tal">${teams.map(x=>{const g=tt.get(x.id)||{},sub=g.note||x.region||'';
-  return html`<a class="tal-c" key=${x.id} href=${'#/team/'+x.id}><span class="tal-r">#${x.rank}</span>${g.seed>0&&html`<span class="tal-s" title=${ru?'Посев':'Seed'}>#${g.seed}</span>`}<b class="tal-n">${x.name}</b>${lu?html`<span class="tal-l">${x.pl.slice(0,7).map(p=>html`<span key=${p.id}><${Flag} x=${p}/>${p.nick}</span>`)}</span>`:html`<span class="tal-g"><${TeamLogo} x=${x} s=${84}/></span>`}<span class="tal-f">${sub}${g.grp?(sub?' · ':'')+t('group')+' '+g.grp:''}</span></a>`})}</div></div><//>`};
+  return html`<${Box} h=${ru?'Участники':'Teams attending'} right=${teams.length>0&&html`<button class="tal-b" onClick=${()=>sl(!lu)}>${lu?(ru?'Скрыть составы':'Hide lineups'):(ru?'Показать составы':'Show lineups')}</button>`}><div class="in"><div class="tal">${teams.map(x=>{const g=tt.get(x.id)||{},sub=[g.note||x.region,g.grp?t('group')+' '+g.grp:''].filter(Boolean).join(' · ');
+  return html`<a class="tal-c" key=${x.id} href=${'#/team/'+x.id}><span class="tal-top"><em class="tal-r">#${x.rank}</em>${g.seed>0&&html`<em class="tal-s" title=${ru?'Посев':'Seed'}>#${g.seed}</em>`}</span><b class="tal-n">${x.name}</b>${lu?html`<span class="tal-l">${x.pl.slice(0,7).map(p=>html`<span key=${p.id}><${Flag} x=${p}/>${p.nick}</span>`)}${!x.pl.length&&html`<span class="mu">—</span>`}</span>`:html`<span class="tal-g"><${TeamLogo} x=${x} s=${76}/></span>`}<span class="tal-f">${sub||'\u00a0'}</span></a>`})}
+${[...Array(tbd)].map((_,i)=>html`<div class="tal-c tbd" key=${'t'+i}><span class="tal-top"><em class="tal-r">TBD</em></span><b class="tal-n">TBD</b><span class="tal-g"><span class="tal-q">?</span></span><span class="tal-f">${ru?'Ожидается':'To be determined'}</span></div>`)}</div></div><//>`};

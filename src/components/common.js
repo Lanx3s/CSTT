@@ -133,7 +133,7 @@ export const NewsRow=({n})=>html`<a class="nrow" href=${'#/news/'+n.id}><${NewsT
 export const NewsMini=({n})=>html`<a class="nmini" href=${'#/news/'+n.id}><span class="ntag" style=${{background:n.c}}>${n.tag}</span><span>${L(n.ti)}</span><small>${n.d}</small></a>`;
 
 /* ---------- игроки ---------- */
-export const PlayerPic=({p,cls=''})=>html`<img class=${'ppic '+cls} src=${p.photo||(import.meta.env.BASE_URL+'avatar.png')} alt="" loading="lazy"/>`;
+export const PlayerPic=({p,cls=''})=>p.photo?html`<img class=${'ppic '+cls} src=${p.photo} alt="" loading="lazy"/>`:html`<span class=${'ppic ph '+cls}>${(p.nick||'?').slice(0,2).toUpperCase()}</span>`;
 export const PlayerCard=({p,nr})=>html`<a class="pcard" href=${'#/player/'+p.id}><${PlayerPic} p=${p}/><span class="pc-i"><b><${Flag} x=${p}/> ${p.nick}</b><small>${p.name||p.role||''}</small></span><${Rt} v=${p.rt}/></a>`;
 
 /* таблица игроков */
