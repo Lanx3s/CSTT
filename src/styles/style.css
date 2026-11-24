@@ -835,16 +835,16 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 
 /* ===== v6.6 ===== */
 /* 1) профиль игрока: строки «ключ — значение» как на HLTV */
-.pinfo{display:flex;flex-direction:column;margin:6px 0 14px;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--r);border-radius:var(--rad);background:linear-gradient(180deg,#4a596d,#3d4b5e);color:#fff;overflow:hidden}
-.pinfo>div{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;min-height:40px;border-bottom:1px solid rgba(255,255,255,.2)}
+.pinfo{display:flex;flex-direction:column;margin:6px 0 14px;border:1px solid var(--ln);border-left:3px solid var(--r);border-radius:var(--rad);background:var(--p2);color:var(--tx);overflow:hidden}
+.pinfo>div{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;min-height:40px;border-bottom:1px solid var(--ln)}
 .pinfo>div:last-child{border-bottom:0}
-.pinfo span{font-size:13px;font-weight:700;color:#fff;text-transform:none;letter-spacing:0}
-.pinfo .q{font-size:10px;font-weight:400;color:#c3cedc;cursor:help;margin-left:2px}
-.pinfo b{font-size:13px;font-weight:400;color:#fff;display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0;text-align:right}
-.pinfo .tlk{display:inline-flex;align-items:center;gap:7px;color:#7fc0ff}.pinfo .tlk:hover{color:#fff}
+.pinfo>div:hover{background:var(--hl)}
+.pinfo span{font-size:13px;font-weight:700;color:var(--tx);text-transform:none;letter-spacing:0}
+.pinfo .q{font-size:10px;font-weight:400;color:var(--mu);cursor:help;margin-left:2px}
+.pinfo b{font-size:13px;font-weight:400;color:var(--tx);display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0;text-align:right}
+.pinfo .tlk{display:inline-flex;align-items:center;gap:7px;color:var(--tx)}.pinfo .tlk:hover{color:var(--r)}
 .pinfo .tlk .tn{font-weight:700}
-.pinfo .rt{color:#fff}.pinfo .rt.hi{color:#7ee08f}.pinfo .rt.dn{color:#ff8a80}
-.pinfo .mu{color:#c3cedc}
+.pinfo .mu{color:var(--mu)}
 
 /* 2) рейтинг: одинаковые логотипы и карточки игроков */
 .rk2-lg{width:44px;height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex:none;background:var(--p3);border:1px solid var(--ln);border-radius:var(--rad);padding:4px;overflow:hidden}
@@ -853,7 +853,7 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 .tlg{aspect-ratio:1/1}
 .rk2-pl{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%}
 .rk2-p{flex:0 0 132px;width:132px;background:linear-gradient(180deg,var(--p3),var(--p))}
-.rk2-ph{position:relative;display:block;width:100%;aspect-ratio:3/4;overflow:hidden;background:linear-gradient(180deg,#3a414d,#1a1e25)}
+.rk2-ph{position:relative;display:block;width:100%;aspect-ratio:3/4;overflow:hidden;background:linear-gradient(180deg,var(--p3),var(--p))}
 .rk2-ph .ppic{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;object-fit:cover;object-position:center 8%;border-radius:0;background:transparent;font-size:30px}
 .rk2-n{height:32px;box-sizing:border-box;padding:0 6px;border-top:1px solid var(--ln);justify-content:center}
 .rk2-n span{overflow:hidden;text-overflow:ellipsis;min-width:0}
