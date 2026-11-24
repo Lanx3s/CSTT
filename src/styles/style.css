@@ -832,3 +832,56 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 .rk2-b{display:flex;flex-direction:column;align-items:center}
 .rk2-go:after{content:"→";font-size:14px}
 .hxp-st{background:var(--p3);border:1px solid var(--ln);border-left:3px solid var(--r);text-transform:uppercase}.hxp-st:hover{background:var(--r)}
+
+/* ===== v6.6 ===== */
+/* 1) профиль игрока: строки «ключ — значение» как на HLTV */
+.pinfo{display:flex;flex-direction:column;margin:6px 0 14px;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--r);border-radius:var(--rad);background:linear-gradient(180deg,#4a596d,#3d4b5e);color:#fff;overflow:hidden}
+.pinfo>div{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;min-height:40px;border-bottom:1px solid rgba(255,255,255,.2)}
+.pinfo>div:last-child{border-bottom:0}
+.pinfo span{font-size:13px;font-weight:700;color:#fff;text-transform:none;letter-spacing:0}
+.pinfo .q{font-size:10px;font-weight:400;color:#c3cedc;cursor:help;margin-left:2px}
+.pinfo b{font-size:13px;font-weight:400;color:#fff;display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0;text-align:right}
+.pinfo .tlk{display:inline-flex;align-items:center;gap:7px;color:#7fc0ff}.pinfo .tlk:hover{color:#fff}
+.pinfo .tlk .tn{font-weight:700}
+.pinfo .rt{color:#fff}.pinfo .rt.hi{color:#7ee08f}.pinfo .rt.dn{color:#ff8a80}
+.pinfo .mu{color:#c3cedc}
+
+/* 2) рейтинг: одинаковые логотипы и карточки игроков */
+.rk2-lg{width:44px;height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex:none;background:var(--p3);border:1px solid var(--ln);border-radius:var(--rad);padding:4px;overflow:hidden}
+.rk2-lg .tlg{width:100%;height:100%;max-width:100%;max-height:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;border-radius:2px}
+.rk2-lg .tlg.bd{border-radius:2px}
+.tlg{aspect-ratio:1/1}
+.rk2-pl{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%}
+.rk2-p{flex:0 0 132px;width:132px;background:linear-gradient(180deg,var(--p3),var(--p))}
+.rk2-ph{position:relative;display:block;width:100%;aspect-ratio:3/4;overflow:hidden;background:linear-gradient(180deg,#3a414d,#1a1e25)}
+.rk2-ph .ppic{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;object-fit:cover;object-position:center 8%;border-radius:0;background:transparent;font-size:30px}
+.rk2-n{height:32px;box-sizing:border-box;padding:0 6px;border-top:1px solid var(--ln);justify-content:center}
+.rk2-n span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rk2-n .flag{flex:none}
+@media(max-width:760px){.rk2-lg{width:36px;height:36px}.rk2-p{flex-basis:calc(33.333% - 7px);width:auto;min-width:92px}}
+
+/* 3) профиль игрока: история матчей */
+.pm-sum{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:1px solid var(--ln);background:var(--p2)}
+.pm-sum>div{display:flex;flex-direction:column;gap:3px;padding:10px 14px;border-right:1px solid var(--ln);min-width:0}.pm-sum>div:last-child{border:0}
+.pm-sum b{font-size:17px;font-weight:800}.pm-sum span{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.pm-fl{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid var(--ln)}
+.pm-fl .tabs{margin:0;border:0;padding:0}
+.pm-sel{height:30px;max-width:100%;background:var(--p3);color:var(--tx);border:1px solid var(--ln);border-radius:var(--rad);padding:0 28px 0 10px;font:600 12px var(--font);cursor:pointer}
+.pm-sel:hover,.pm-sel:focus{border-color:var(--r);outline:0}
+.pm-w{overflow-x:auto}
+.pm-t td{vertical-align:middle;white-space:nowrap}
+.pm-t tr.pw td:first-child{box-shadow:inset 3px 0 var(--gr)}.pm-t tr.pl td:first-child{box-shadow:inset 3px 0 var(--rd)}.pm-t tr.pd td:first-child{box-shadow:inset 3px 0 var(--mu)}
+.pm-d{color:var(--mu);width:70px}.pm-d small{display:block;font-size:10px;opacity:.8}
+.pm-o{display:flex;flex-direction:column;gap:2px;align-items:flex-start;white-space:normal}.pm-o .tlk{font-weight:700}
+.pm-ev{font-size:11px;color:var(--mu);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pm-ev:hover{color:var(--r)}
+.pm-mp{display:flex;gap:4px;flex-wrap:wrap;white-space:normal}
+.pm-mp span{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 6px;font-size:11px;background:var(--p3);border:1px solid var(--ln);border-left:2px solid var(--mu);border-radius:2px;color:var(--tx)}
+.pm-mp span.w{border-left-color:var(--gr)}.pm-mp span.l{border-left-color:var(--rd)}.pm-mp b{font-weight:700;color:var(--mu)}
+.pm-sc{display:inline-flex;align-items:center;gap:6px;min-width:44px;justify-content:center;padding:3px 8px;font-weight:800;border-radius:2px;background:var(--p3);color:var(--tx)}
+.pm-sc.w{background:color-mix(in srgb,var(--gr) 22%,transparent);color:var(--gr)}.pm-sc.l{background:color-mix(in srgb,var(--rd) 22%,transparent);color:var(--rd)}
+.pm-sc:hover{filter:brightness(1.2)}
+.df{font-style:normal;font-size:10px;margin-left:6px;color:var(--mu)}.df.up{color:var(--gr)}.df.dn{color:var(--rd)}
+.pm-more{display:flex;align-items:center;justify-content:center;width:calc(100% - 20px);height:36px;margin:10px;background:var(--p3);border:1px solid var(--ln);border-left:3px solid var(--r);border-radius:var(--rad);color:#fff;font:700 12px var(--font);letter-spacing:.3px;text-transform:uppercase;cursor:pointer;transition:background .15s,border-color .15s}
+.pm-more:hover{background:var(--r);border-color:var(--r)}
+@media(max-width:900px){.pm-sum{grid-template-columns:repeat(3,minmax(0,1fr))}.pm-sum>div{border-bottom:1px solid var(--ln)}.pm-t .hm{display:none}}
+@media(max-width:560px){.pinfo>div{padding:9px 12px}.pm-ev{max-width:150px}}
