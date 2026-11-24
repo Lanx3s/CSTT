@@ -87,3 +87,11 @@ export const PalSel=({v,set})=>{
   const cur=/^#[0-9a-f]{6}$/i.test(v||'')?v.toLowerCase():'';
   return html`<div class="pal"><div class="pal-g">${PALETTE.map(c=>html`<button type="button" key=${c} class=${'pal-s'+(cur===c?' on':'')} style=${{background:c}} title=${c} onClick=${()=>set(c)}></button>`)}</div>
 <div class="pal-r"><input type="color" value=${cur||'#3f9b52'} onChange=${e=>set(e.target.value)}/><input class="sm" placeholder="#3f9b52" value=${v||''} onChange=${e=>set(e.target.value.trim())}/><button type="button" class="b g" onClick=${()=>set('')}>Сбросить</button><span class="pal-p" style=${{background:cur?`radial-gradient(120% 90% at 50% 25%,${cur},#0d1117 78%)`:'#0d1117'}}></span></div></div>`};
+
+/* ---- выбор трофеев игрока за конкретную команду ---- */
+export const TroSel=({v,set,D,team})=>{
+  const sel=(v||'').split(/[\s,;]+/).filter(Boolean).map(Number),tid=Number(team);
+  if(!tid)return html`<div class="hint">Сначала выберите команду выше.</div>`;
+  const list=(D.trophies||[]).filter(y=>Number(y.team)===tid||sel.includes(y.id)),tn=id=>((D.tournaments||[]).find(x=>x.id===id)||{}).n,
+    tog=id=>set((sel.includes(id)?sel.filter(x=>x!==id):[...sel,id]).join(', '));
+  return list.length?html`<div class="chips">${list.map(y=>html`<button type="button" key=${y.id} class=${'ch '+(sel.includes(y.id)?'on':'')} onClick=${()=>tog(y.id)}>${y.title||tn(y.tour)||'Трофей'} <small>${[y.place,y.year].filter(Boolean).join(' · ')}</small></button>`)}</div>`:html`<div class="hint">У этой команды пока нет трофеев — добавьте их во вкладке «Достижения команд».</div>`};

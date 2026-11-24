@@ -13,7 +13,7 @@ const fmt=s=>{try{return new Date(s).toLocaleString(lang==='ru'?'ru-RU':'en-GB',
 const Ava=({x,s=36})=>x.avatar?html`<img class="fav2" style=${{width:s,height:s}} src=${x.avatar} alt=""/>`:html`<span class="fav2 ph" style=${{width:s,height:s,fontSize:s*.42}}>${(x.nick||'?')[0].toUpperCase()}</span>`;
 const Err=({e})=>e?html`<div class="fmsg">${/relation|forum_|schema/i.test(e)?'Форум ещё не подключён: выполните обновлённый supabase/schema.sql в Supabase → SQL Editor.':e}</div>`:null;
 
-const NeedLogin=()=>html`<div class="fneed">${lang==='ru'?'Чтобы писать на форуме, нужно ':'To post you need to '}<a href="#/login">${lang==='ru'?'войти или зарегистрироваться':'sign in or register'}</a></div>`;
+export const NeedLogin=()=>html`<div class="fneed">${lang==='ru'?'Чтобы писать на форуме, нужно ':'To post you need to '}<a href="#/login">${lang==='ru'?'войти или зарегистрироваться':'sign in or register'}</a></div>`;
 
 const Topics=()=>{
   const au=useAuth(),ru=lang==='ru',[cat,sc]=useState(''),[list,sl]=useState(null),[err,se]=useState(''),[nw,sn]=useState(false),[f,sf]=useState({cat:'general',title:'',body:''}),[bz,sb2]=useState(false);
@@ -39,7 +39,7 @@ const Post=({p,au,op,onDel})=>{const own=au.user&&au.user.id===p.uid,can=own||au
   return html`<div class=${'fpost'+(op?' op':'')}><div class="fp-a"><${Ava} x=${p} s=${48}/>${userHref(p)?html`<a class="fp-n" href=${userHref(p)}><b>${p.nick}</b></a>`:html`<b>${p.nick}</b>`}<small class="mu">ID ${p.pid||''}</small></div><div class="fp-b"><div class="fp-h"><span class="mu">${fmt(p.created_at)}</span>${can&&html`<button class="lnk" onClick=${onDel}>${lang==='ru'?'Удалить':'Delete'}</button>`}</div><div class="fp-t">${p.body}</div></div></div>`};
 
 /* ветка ответов: у каждого сообщения свои ответы, их можно скрыть/показать (по умолчанию открыты) */
-const Node=({n,kids,num,au,locked,onDel,onReply,depth})=>{
+export const Node=({n,kids,num,au,locked,onDel,onReply,depth})=>{
   const ru=lang==='ru',[open,so]=useState(true),[rp,sr]=useState(false),[txt,st2]=useState(''),[bz,sz]=useState(false);
   const own=au.user&&au.user.id===n.uid,can=own||au.admin,list=kids.get(n.id)||[];
   const cnt=function c(id){return (kids.get(id)||[]).reduce((a,x)=>a+1+c(x.id),0)}(n.id);

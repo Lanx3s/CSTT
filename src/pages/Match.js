@@ -1,3 +1,4 @@
+import {Comments} from '../components/Comments.js';
 import {html,F} from '../lib/html.js';
 import {MS,PS,TR,team,tour,player,SITE} from '../lib/data.js';
 import {t,L} from '../lib/i18n.js';
@@ -53,7 +54,8 @@ ${(m.note||(f&&w!=null))&&html`<div class="mh-note">${m.note}${f&&w!=null&&html`
 <${Compare} m=${m}/>
 <${Lineups} m=${m}/>
 <${Veto} m=${m}/>
-<${Stats} m=${m}/></div>
+<${Stats} m=${m}/>
+<${Comments} kind="match" id=${m.id}/></div>
 <aside>
 <${MatchInfo} m=${m}/>
 <${Box} h=${t('h2h')}><div class="h2h"><${TeamLogo} x=${A} s=${40}/><div class="sc"><b class=${H.a>H.b?'w':''}>${H.a}</b><i>–</i><b class=${H.b>H.a?'w':''}>${H.b}</b></div><${TeamLogo} x=${B} s=${40}/></div>${H.list.slice(0,4).map(x=>html`<${Bm} key=${x.id} m=${x} tag=${1}/>`)}${!H.list.length&&html`<${Empty} text=${t('none')}/>`}<//>

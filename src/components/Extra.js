@@ -82,10 +82,10 @@ export const PlayerHero=({p,role})=>{
 /* ---------- плашка «История команд и достижения» (без дат) ---------- */
 export const PlayerHistory=({p})=>{
   const ru=lang==='ru';
-  let rows=PH.filter(x=>x.player===p.id&&x.team!=null&&!x.hide).map(x=>({id:x.id,team:x.team,dates:x.dates,cur:x.team===p.team}));
+  let rows=PH.filter(x=>x.player===p.id&&x.team!=null&&!x.hide).map(x=>({id:x.id,team:x.team,dates:x.dates,tro:x.tro||[],cur:x.team===p.team}));
   if(p.team!=null&&!rows.some(r=>r.team===p.team))rows=[{id:'cur',team:p.team,dates:'',cur:true},...rows];
   if(!rows.length)return null;
-  const trs=r=>TROPH.filter(y=>y.team===r.team&&(y.pl.length?y.pl.includes(p.id):r.cur));
+  const trs=r=>r.tro&&r.tro.length?TROPH.filter(y=>r.tro.includes(y.id)):TROPH.filter(y=>y.team===r.team&&(y.pl.length?y.pl.includes(p.id):r.cur));
   return html`<${Box} h=${ru?'История команд':'Team history'} cls="phs"><div class="phs-h"><span>${ru?'Команда':'Team'}</span><span>${ru?'Период':'Period'}</span><span>${ru?'Трофеи':'Trophies'}</span><span></span></div>
 ${rows.map(r=>{const T=team(r.team),tr=trs(r);
   return html`<div class=${'phs-r'+(r.cur?' cur':'')} key=${r.id}><a class="phs-t" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${28}/><b>${T.name}</b></a><span class="phs-d">${r.dates||'—'}</span><div class="phs-tr">${tr.map(y=>{const o=y.tour!=null?tour(y.tour):null,tip=[y.title,y.place,y.year].filter(Boolean).join(' · ');return o?html`<a key=${y.id} href=${'#/tournament/'+o.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></a>`:html`<span key=${y.id} title=${tip}><${Hex} x=${{kind:'champion',img:y.img}} s=${30}/></span>`})}</div><a class="phs-b" href=${'#/team/'+T.id}>${ru?'Команда':'Team'}</a></div>`})}<//>`};

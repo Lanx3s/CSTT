@@ -5,6 +5,7 @@ import {t,L} from '../lib/i18n.js';
 import {byTime} from '../lib/calc.js';
 import {Box,Empty,NewsRow,NewsMini,Bm,Chip,TourLogo,TeamLogo,Tabs} from '../components/common.js';
 import {Md,readTime} from '../components/Md.js';
+import {Comments} from '../components/Comments.js';
 
 /* ---------- список новостей ---------- */
 export const News=()=>{
@@ -36,13 +37,13 @@ ${L(n.sub)&&html`<p class="lead">${L(n.sub)}</p>`}
 ${cv&&html`<img class="hn-img" src=${cv} alt="" onClick=${()=>slb(cv)}/>`}
 ${body?html`<${Md} text=${body}/>`:null}
 ${n.gallery.length>0&&html`<div class="gal2">${n.gallery.map((g,k)=>html`<img key=${k} src=${g} alt="" loading="lazy" onClick=${()=>slb(g)}/>`)}</div>`}${lb&&html`<div class="lbx" onClick=${()=>slb(null)}><img src=${lb} alt=""/></div>`}
-<div class="pnav">${prev?html`<a href=${'#/news/'+prev.id}>← ${t('prev')}<b>${L(prev.ti)}</b></a>`:html`<span/>`}${next?html`<a class="r" href=${'#/news/'+next.id}>${t('next')} →<b>${L(next.ti)}</b></a>`:html`<span/>`}</div></article>
+<div class="pnav">${prev?html`<a href=${'#/news/'+prev.id}>← ${t('prev')}<b>${L(prev.ti)}</b></a>`:html`<span/>`}${next?html`<a class="r" href=${'#/news/'+next.id}>${t('next')} →<b>${L(next.ti)}</b></a>`:html`<span/>`}</div><${Comments} kind="news" id=${n.id}/></article>
 <aside>${(R||T)&&html`<${Box} h=${t('relEvent')}><div class="in">${R&&html`<a class="emb embt" href=${'#/tournament/'+R.id}><${TourLogo} o=${R} s=${44}/><span><b>${R.n}</b><small>${[R.d,R.pr].filter(Boolean).join(' · ')}</small></span></a>`}${T&&!T.tbd&&html`<a class="emb embt" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${44}/><span><b>${T.name}</b></span></a>`}</div><//>`}
 <${Box} h=${t('related')}>${more.map(x=>html`<${NewsMini} key=${x.id} n=${x}/>`)}<//></aside></div></div>`}
   return html`<div class=${'post '+lay} style=${lay==='full'?{'--pbg':`url("${bg}")`}:{}}>
 ${lay==='cover'&&html`<div class="phero" style=${{backgroundImage:`linear-gradient(180deg,rgba(8,12,18,.35),var(--bg) 98%),url("${bg}")`}}>${head}</div>`}
 ${lay!=='cover'&&lay!=='side'&&html`<div class="phead">${head}</div>`}
 <div class="pgrid"><article class="pbody">${lay==='side'&&html`<div class="sidehd">${n.img||n.gallery[0]?html`<img class="sideimg" src=${n.img||n.gallery[0]} alt="" onClick=${()=>slb(n.img||n.gallery[0])}/>`:null}${head}</div>`}${n.img&&lay==='plain'&&html`<img class="pcover" src=${n.img} alt=""/>`}${body?html`<${Md} text=${body}/>`:null}
-${n.gallery.length>0&&html`<div class="gal2">${n.gallery.map((g,k)=>html`<img key=${k} src=${g} alt="" loading="lazy" onClick=${()=>slb(g)}/>`)}</div>`}${lb&&html`<div class="lbx" onClick=${()=>slb(null)}><img src=${lb} alt=""/></div>`}<div class="pnav">${prev?html`<a href=${'#/news/'+prev.id}>← ${t('prev')}<b>${L(prev.ti)}</b></a>`:html`<span/>`}${next?html`<a class="r" href=${'#/news/'+next.id}>${t('next')} →<b>${L(next.ti)}</b></a>`:html`<span/>`}</div></article>
+${n.gallery.length>0&&html`<div class="gal2">${n.gallery.map((g,k)=>html`<img key=${k} src=${g} alt="" loading="lazy" onClick=${()=>slb(g)}/>`)}</div>`}${lb&&html`<div class="lbx" onClick=${()=>slb(null)}><img src=${lb} alt=""/></div>`}<div class="pnav">${prev?html`<a href=${'#/news/'+prev.id}>← ${t('prev')}<b>${L(prev.ti)}</b></a>`:html`<span/>`}${next?html`<a class="r" href=${'#/news/'+next.id}>${t('next')} →<b>${L(next.ti)}</b></a>`:html`<span/>`}</div><${Comments} kind="news" id=${n.id}/></article>
 <aside>${(R||T)&&html`<${Box} h=${t('relEvent')}><div class="in">${R&&html`<a class="emb embt" href=${'#/tournament/'+R.id}><${TourLogo} o=${R} s=${44}/><span><b>${R.n}</b><small>${[R.d,R.pr].filter(Boolean).join(' · ')}</small></span></a>`}${T&&!T.tbd&&html`<a class="emb embt" href=${'#/team/'+T.id}><${TeamLogo} x=${T} s=${44}/><span><b>${T.name}</b><small>#${T.rank} · ${T.pts} ${t('points')}</small></span></a>`}</div><//>`}
 <${Box} h=${t('related')}>${more.map(x=>html`<${NewsMini} key=${x.id} n=${x}/>`)}<//></aside></div></div>`};

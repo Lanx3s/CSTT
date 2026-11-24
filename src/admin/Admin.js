@@ -4,13 +4,13 @@ import {sb} from '../lib/supabase.js';
 import {fetchAll,load,MISSING,applyTheme,parseMaps,seriesOf,MS,SITE} from '../lib/data.js';
 import {useAuth,uploadImage} from '../lib/auth.js';
 import {S,nm,ctx,STAGES} from './schema.js';
-import {MapSel,MapsEd,VetoEd,PrizeEd,MdEd,PlSel,CcSel,PalSel} from './editors.js';
+import {MapSel,MapsEd,VetoEd,PrizeEd,MdEd,PlSel,CcSel,PalSel,TroSel} from './editors.js';
 import {genSingle,genDouble,genSwiss,genGroups,genGsl} from './gen.js';
 import {Plate} from '../components/common.js';
 
-const ORDER=['bracket','part','tournaments','matches','pstats','teams','players','phist','titles','trophies','news','maps','site'];
+const ORDER=['bracket','part','tournaments','matches','pstats','teams','players','phist','profiles','titles','trophies','news','maps','site'];
 const TITLE={bracket:'Сетки турниров',part:'Участники турниров'};
-const WIDE=['pal','plsel','area','md','mapsel','mapsed','vetoed','prized','h','img','imgs'];
+const WIDE=['trsel','pal','plsel','area','md','mapsel','mapsed','vetoed','prized','h','img','imgs'];
 
 /* ---------- универсальное поле ---------- */
 const Fld=({f,row,set,D})=>{
@@ -19,6 +19,7 @@ const Fld=({f,row,set,D})=>{
   if(ty==='area')i=html`<textarea rows="4" value=${v} onChange=${ch}/>`;
   else if(ty==='md')i=html`<${MdEd} v=${v} set=${x=>set(k,x)} D=${D}/>`;
   else if(ty==='cc')i=html`<${CcSel} v=${v} set=${x=>set(k,x)}/>`;
+  else if(ty==='trsel')i=html`<${TroSel} v=${v} set=${x=>set(k,x)} D=${D} team=${row.team}/>`;
   else if(ty==='pal')i=html`<${PalSel} v=${v} set=${x=>set(k,x)}/>`;
   else if(ty==='plsel')i=html`<${PlSel} v=${v} set=${x=>set(k,x)} D=${D}/>`;
   else if(ty==='mapsel')i=html`<${MapSel} v=${v} set=${x=>set(k,x)} D=${D}/>`;
@@ -60,8 +61,8 @@ ${c==='site'&&html`<div class="pvbox"><button type="button" class="b g" onClick=
 <div class="fm">${s.f.map((f,i)=>html`<${Fld} key=${f[0]+'_'+i} f=${f} row=${row} set=${set} D=${D}/>`)}</div>
 <div class="sv"><button class="b" disabled=${busy} onClick=${save}>${busy?'Сохранение…':'Сохранить'}</button>${!one&&html`<button class="b g" onClick=${()=>sr(null)}>Отмена</button>`}</div></div>`;
   const list=[...rows].reverse().filter(r=>!q||s.f.some(f=>f[2]!=='img'&&f[2]!=='h'&&val(f[0],r).toLowerCase().includes(q.toLowerCase())));
-  return html`<div><h1>${s.t}</h1><div class="tools"><button class="b" onClick=${()=>sr({})}>+ Добавить</button><input class="srch" placeholder="Поиск по таблице…" value=${q} onChange=${e=>sq(e.target.value)}/><span class="hint">Всего: ${rows.length}</span></div>
-<table><thead><tr>${s.cols.map(k=>html`<th key=${k}>${s.f.find(x=>x[0]===k)[1].split('(')[0]}</th>`)}<th></th></tr></thead><tbody>${list.map(r=>html`<tr key=${r.id}>${s.cols.map(k=>html`<td key=${k}>${show(k,r)}</td>`)}<td class="act"><button class="b" onClick=${()=>sr({...r})}>Изменить</button><button class="b g" title="Создать копию" onClick=${()=>sr({...r,id:undefined})}>Копия</button><button class="b d" onClick=${()=>del(r)}>Удалить</button></td></tr>`)}</tbody></table>${!list.length&&html`<p class="hint">Ничего нет. Нажмите «Добавить».</p>`}</div>`};
+  return html`<div><h1>${s.t}</h1><div class="tools">${!s.noadd&&html`<button class="b" onClick=${()=>sr({})}>+ Добавить</button>`}<input class="srch" placeholder="Поиск по таблице…" value=${q} onChange=${e=>sq(e.target.value)}/><span class="hint">Всего: ${rows.length}</span></div>
+<table><thead><tr>${s.cols.map(k=>html`<th key=${k}>${s.f.find(x=>x[0]===k)[1].split('(')[0]}</th>`)}<th></th></tr></thead><tbody>${list.map(r=>html`<tr key=${r.id}>${s.cols.map(k=>html`<td key=${k}>${show(k,r)}</td>`)}<td class="act"><button class="b" onClick=${()=>sr({...r})}>Изменить</button>${!s.noadd&&html`<button class="b g" title="Создать копию" onClick=${()=>sr({...r,id:undefined})}>Копия</button>`}${!s.nodel&&html`<button class="b d" onClick=${()=>del(r)}>Удалить</button>`}</td></tr>`)}</tbody></table>${!list.length&&html`<p class="hint">Ничего нет. Нажмите «Добавить».</p>`}</div>`};
 
 /* ---------- карточка матча в редакторе сетки ---------- */
 export const MCard=({m,D,reload,note,open})=>{
