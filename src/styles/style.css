@@ -885,3 +885,23 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 .pm-more:hover{background:var(--r);border-color:var(--r)}
 @media(max-width:900px){.pm-sum{grid-template-columns:repeat(3,minmax(0,1fr))}.pm-sum>div{border-bottom:1px solid var(--ln)}.pm-t .hm{display:none}}
 @media(max-width:560px){.pinfo>div{padding:9px 12px}.pm-ev{max-width:150px}}
+
+/* ===== v6.8: страница матча — флаги стран фоном плашки, ровные логотипы и названия ===== */
+.mhd{isolation:isolate;overflow:hidden}
+/* флаг своей команды на своей половине: размытый, к центру плавно растворяется в цвет плашки */
+.mhd>.mhf{display:block!important;position:absolute;top:-14px;bottom:-14px;width:46%;background-size:cover;background-position:center;background-repeat:no-repeat;filter:blur(7px) saturate(1.1);opacity:.6;z-index:0;pointer-events:none}
+.mhd>.mhf.a{left:-14px;-webkit-mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
+.mhd>.mhf.b{right:-14px;-webkit-mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
+.mhd .mh-main{position:relative;z-index:1;align-items:start!important}
+/* одинаковая сетка у обеих команд: логотип в квадрате, название в одну строку, счёт, место */
+.mhd .mteam{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;min-width:0}
+.mhd .mteam .mt-lg{display:flex;align-items:center;justify-content:center;flex:none}
+.mhd .mteam .tlg{flex:none;object-fit:contain}
+.mhd .mteam .nm{display:block;width:100%;text-align:center;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;text-shadow:0 1px 8px #000a}
+.mhd .mteam .sb{min-height:16px;justify-content:center;font-size:12px}
+.mhd .mcenter{padding-top:14px}
+@media(max-width:760px){
+  .mhd .mteam{gap:8px}
+  .mhd .mteam .nm{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.5em;font-size:12px}
+  .mhd>.mhf{width:60%}
+}

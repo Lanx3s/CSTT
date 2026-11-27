@@ -4,12 +4,10 @@ import {MS,PS,TR,team,tour,player,SITE} from '../lib/data.js';
 import {t,L} from '../lib/i18n.js';
 import {Compare} from '../components/Fx.js';
 import {Lineups,MatchInfo} from '../components/Extra.js';
-import {winner,formOf,h2h,byRecent,byTime,f2} from '../lib/calc.js';
+import {winner,h2h,byRecent,byTime,f2} from '../lib/calc.js';
 import {Box,Empty,TeamLogo,Flag,Bm,Rt,mapBg,flagSrc,MapTile,TourLogo,Chip,Row,PlayerPic} from '../components/common.js';
 
-const Form=({id})=>html`<span class="form">${formOf(id,5).map((x,i)=>html`<i key=${i} class=${'f-'+x}>${x==='w'?'W':x==='l'?'L':'D'}</i>`)}</span>`;
-
-const Side=({id,right,sc,cl})=>{const T=team(id),inner=html`<${F}><${TeamLogo} x=${T} s=${92}/><b class="nm">${T.name}</b>${sc!=null&&html`<b class=${'hx-sc '+(cl||'')}>${sc}</b>`}<span class="sb">${T.cc&&html`<${Flag} x=${T}/>`}${T.rank?html`<span>#${T.rank}</span>`:null}</span>${id!=null&&html`<${Form} id=${id}/>`}<//>`;
+const Side=({id,right,sc,cl})=>{const T=team(id),inner=html`<${F}><span class="mt-lg"><${TeamLogo} x=${T} s=${92}/></span><b class="nm" title=${T.name}>${T.name}</b>${sc!=null?html`<b class=${'hx-sc '+(cl||'')}>${sc}</b>`:null}<span class="sb">${T.rank?'#'+T.rank:''}</span><//>`;
   return T.tbd?html`<div class=${'mteam '+(right?'r':'')}>${inner}</div>`:html`<a class=${'mteam '+(right?'r':'')} href=${'#/team/'+T.id}>${inner}</a>`};
 
 /* карточка карты: фон-картинка, кто выбрал, счёт, половины */
@@ -40,11 +38,11 @@ export const Match=({id})=>{
   const pk=x=>x.pick||pickFromVeto(x)||'';
   const n=f?m.maps.length:Math.max(m.bo,m.maps.length),slots=Array.from({length:n},(_,i)=>m.maps[i]||null);
   const same=MS.filter(x=>x.tour===m.tour&&x.id!==m.id&&(x.stage===m.stage)&&(x.grp||'')===(m.grp||'')).sort(byTime).slice(0,6);
-  const bg={};
+  const fg=T=>{const u=T&&!T.tbd?flagSrc(T,640):null;return u?{backgroundImage:'url("'+u+'")'}:null},fa=fg(A),fb=fg(B);
   const pool=R?R.pool:[];
   return html`<div class="mpage">
 <div class="crumb"><a href="#/tournaments">${t('tournaments')}</a><i>›</i>${R?html`<a href=${'#/tournament/'+R.id}>${R.n}</a>`:null}<i>›</i><a href=${'#/tournament/'+m.tour+'/bracket'}>${t(m.stage)||'—'}${m.grp?' · '+t('group')+' '+m.grp:''}${m.rnd&&['Swiss','GSL','Group stage'].includes(m.stage)?' · '+t('round')+' '+m.rnd:''}</a></div>
-<section class="mhd" style=${bg}>
+<section class="mhd">${fa&&html`<span class="mhf a" style=${fa} aria-hidden="true"></span>`}${fb&&html`<span class="mhf b" style=${fb} aria-hidden="true"></span>`}
 <div class="mh-main"><${Side} id=${m.a} sc=${m.st==='up'?null:m.s1} cl=${f?(w===m.a?'w':w===m.b?'l':''):''}/>
 <div class="mcenter"><div class=${'hx-time'+(m.tm?'':' nd')}>${m.tm||m.d||'—'}</div>${m.tm&&m.d&&html`<div class="hx-date">${m.d}</div>`}${R&&html`<a class="hx-ev" href=${'#/tournament/'+R.id}>${R.n}</a>`}<div class=${'hx-st '+m.st}>${m.st==='live'?'● LIVE':f?t('finished'):'BO'+m.bo}</div>${m.st!=='up'&&html`<span class="bo">BO${m.bo}</span>`}</div>
 <${Side} id=${m.b} right=${1} sc=${m.st==='up'?null:m.s2} cl=${f?(w===m.b?'w':w===m.a?'l':''):''}/></div>
@@ -59,6 +57,5 @@ ${(m.note||(f&&w!=null))&&html`<div class="mh-note">${m.note}${f&&w!=null&&html`
 <aside>
 <${MatchInfo} m=${m}/>
 <${Box} h=${t('h2h')}><div class="h2h"><${TeamLogo} x=${A} s=${40}/><div class="sc"><b class=${H.a>H.b?'w':''}>${H.a}</b><i>–</i><b class=${H.b>H.a?'w':''}>${H.b}</b></div><${TeamLogo} x=${B} s=${40}/></div>${H.list.slice(0,4).map(x=>html`<${Bm} key=${x.id} m=${x} tag=${1}/>`)}${!H.list.length&&html`<${Empty} text=${t('none')}/>`}<//>
-<${Box} h=${t('form')}><div class="frow"><span>${A.name}</span><${Form} id=${m.a}/></div><div class="frow"><span>${B.name}</span><${Form} id=${m.b}/></div><//>
 ${same.length>0&&html`<${Box} h=${t('sameEvent')} href=${'#/tournament/'+m.tour}><div class="mlist">${same.map(x=>html`<${Bm} key=${x.id} m=${x}/>`)}</div><//>`}
 </aside></div></div>`};
