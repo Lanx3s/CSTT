@@ -25,12 +25,13 @@ import {Search} from './pages/Search.js';
 import {Forum} from './pages/Forum.js';
 import {TeamApply} from './pages/TeamApply.js';
 import {PlayerStats} from './pages/PlayerStats.js';
+import {Reset} from './pages/Reset.js';
 import {TourReg} from './pages/TourReg.js';
 import {GrandFinal,Socials} from './components/Extra.js';
 import {Admin} from './admin/Admin.js';
 
 const parse=()=>location.hash.replace(/^#\/?/,'').split('/');
-const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,apply:TeamApply,pcard:PlayerStats,tourreg:TourReg,login:Login,profile:Profile,user:User,users:Users};
+const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,apply:TeamApply,pcard:PlayerStats,reset:Reset,tourreg:TourReg,login:Login,profile:Profile,user:User,users:Users};
 
 const Ticker=()=>{
   const live=MS.filter(m=>m.st==='live'),up=MS.filter(m=>m.st==='up').sort(byTime).slice(0,8),fin=MS.filter(m=>m.st==='fin').sort(byRecent).slice(0,6);

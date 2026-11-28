@@ -70,13 +70,14 @@
 .sc-sd{display:flex;flex-direction:column;gap:4px;padding:12px 16px;background:var(--p2);border-left:3px solid var(--sc-accent);max-width:170px}.sc-sd:last-child{justify-self:end;width:100%}.sc-sd:first-child{width:100%}
 .sc-sd span{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--sc-mu,var(--mu))}.sc-sd b{font-size:30px;font-weight:800}
 .sc-g{position:relative;width:260px;max-width:100%}.sc-g svg{display:block;width:100%;height:auto}
-.sc-g path{fill:none;stroke-width:13;stroke-linecap:round}.sc-g .tr{stroke:var(--sc-line,var(--ln))}.sc-g .vl{stroke:var(--sc-accent);transition:stroke-dashoffset 1.7s cubic-bezier(.22,.8,.2,1);filter:drop-shadow(0 0 6px rgba(212,20,28,.55))}
+.sc-g path{fill:none;stroke-width:13;stroke-linecap:round}.sc-g .tr{stroke:var(--sc-line,var(--ln))}.sc-g .vl{stroke:var(--lc,var(--sc-accent));transition:stroke-dashoffset 1.7s cubic-bezier(.22,.8,.2,1);filter:drop-shadow(0 0 6px color-mix(in srgb,var(--lc,var(--sc-accent)) 60%,transparent))}
 .sc-gc{position:absolute;left:0;right:0;top:34%;display:flex;flex-direction:column;align-items:center;gap:0}.sc-gc b{font-size:54px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}.sc-gc span{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--sc-mu,var(--mu));margin-top:4px}
-.lv{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--sc-mu,var(--mu))}.lv.l0{color:#7b8393}.lv.l1{color:#c9d1dc}.lv.l2,.lv.l3{color:var(--sc-accent)}.sc-gc .lv{margin-bottom:6px}
+.l0{--lc:#e5484d}.l1{--lc:#f5b83d}.l2{--lc:#46c35f}.l3{--lc:#2fdc6c}
+.lv{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--lc,var(--sc-mu,var(--mu)))}.sc-gc .lv{margin-bottom:6px;font-size:11px}
 .sc-gr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:10px}
-.sc-t{position:relative;padding:12px 14px 12px;background:var(--p2);border-left:3px solid var(--sc-accent);display:flex;flex-direction:column;gap:2px;min-width:0}
+.sc-t{position:relative;padding:12px 14px 12px;background:var(--p2);border-left:3px solid var(--lc,var(--sc-line));display:flex;flex-direction:column;gap:2px;min-width:0}
 .sc-t b{font-size:28px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}.sc-t .nm{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sc-mu,var(--mu))}
-.sc-t .bar{position:relative;height:5px;background:var(--sc-line,var(--ln));margin:9px 0 5px}.sc-t .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--sc-accent);transition:width 1.3s cubic-bezier(.22,.8,.2,1)}
+.sc-t .bar{position:relative;height:5px;background:var(--sc-line,var(--ln));margin:9px 0 5px}.sc-t .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--lc,var(--sc-accent));transition:width 1.3s cubic-bezier(.22,.8,.2,1)}
 .sc-t .bar u{position:absolute;top:-4px;width:2px;height:13px;background:#fff;transition:left 1.3s cubic-bezier(.22,.8,.2,1)}.sc-t .lv{align-self:flex-end}
 .sc-ft{margin-top:14px;padding-top:10px;border-top:1px solid var(--sc-line,var(--ln));font-size:11px;color:var(--sc-mu,var(--mu));letter-spacing:.04em}
 .sc-act{display:flex;gap:10px;flex-wrap:wrap}.sc-nt{max-width:720px;margin:0}
@@ -115,3 +116,13 @@
 .ad-maps tr.off td{opacity:.55}
 @media(max-width:760px){.ad-top{grid-template-columns:1fr}.ad-rej{flex-direction:column;align-items:stretch}}
 .ap-calc{align-self:flex-start}
+
+/* --- восстановление пароля --- */
+.au-fg{align-self:flex-end;font-size:12px;margin-top:6px;color:var(--mu);text-decoration:underline;text-underline-offset:2px}.au-fg:hover{color:var(--r)}
+.au-card.rs{display:flex;flex-direction:column;gap:14px;text-align:left;max-width:440px}.au-card.rs h2{margin:0}.au-card.rs p{margin:0}
+.rs .au-brand{margin-bottom:0}
+.rs-st{display:flex;gap:8px}.rs-st i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ln);color:var(--mu);font-style:normal;font-size:12px;font-weight:800;border-radius:50%}.rs-st i.on{background:var(--r);border-color:var(--r);color:#fff}.rs-st i.dn{border-color:var(--r);color:var(--r)}
+.rs-code{font-size:28px!important;font-weight:800;letter-spacing:.35em;text-align:center;font-variant-numeric:tabular-nums}
+.rs-ln{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.rs-ln .lnk[disabled]{opacity:.55;cursor:default}
+.rs-ok{display:flex}.rs-ok i{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--r);color:#fff;border-radius:50%;font-size:26px;font-style:normal}
+.au-card.rs .btn{align-self:flex-start}

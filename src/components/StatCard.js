@@ -3,7 +3,7 @@ import {useState,useEffect,useRef} from 'react';
 import {html} from '../lib/html.js';
 import {team,pteam,SITE} from '../lib/data.js';
 import {Flag,TeamLogo,PlayerPic} from './common.js';
-import {SCALE,LEVELS,level,frac} from '../lib/pstat.js';
+import {SCALE,LEVELS,LVC,level,frac} from '../lib/pstat.js';
 
 /* Темы карточки. По умолчанию — дизайн CSTT (цвета берутся из переменных сайта). Новые темы добавляются сюда; выбор — SITE.card_theme или проп theme. */
 export const CARD_THEMES={
@@ -20,13 +20,13 @@ const fmt=(k,v)=>v==null?'—':v.toFixed(SCALE[k].d)+(SCALE[k].u||'');
 
 const Gauge=({v})=>{
   const go=useGo(),f=frac('rt',v),n=useCount(v,2,150,1700),lv=level('rt',v);
-  return html`<div class="sc-g"><svg viewBox="0 0 200 178" aria-hidden="true"><path class="tr" d="M46.26 153.74 A76 76 0 1 1 153.74 153.74" pathLength="1000"/><path class="vl" d="M46.26 153.74 A76 76 0 1 1 153.74 153.74" pathLength="1000" style=${{strokeDasharray:1000,strokeDashoffset:go?1000*(1-f):1000}}/></svg>
+  return html`<div class=${'sc-g'+(lv>=0?' l'+lv:'')}><svg viewBox="0 0 200 178" aria-hidden="true"><path class="tr" d="M46.26 153.74 A76 76 0 1 1 153.74 153.74" pathLength="1000"/><path class="vl" d="M46.26 153.74 A76 76 0 1 1 153.74 153.74" pathLength="1000" style=${{strokeDasharray:1000,strokeDashoffset:go?1000*(1-f):1000}}/></svg>
 <div class="sc-gc">${lv>=0&&html`<em class=${'lv l'+lv}>${LEVELS[lv]}</em>`}<b>${v==null?'—':n.toFixed(2)}</b><span>RATING</span></div></div>`};
 const useGo=()=>{const [g,sg]=useState(reduce());useEffect(()=>{if(g)return;const id=requestAnimationFrame(()=>requestAnimationFrame(()=>sg(true)));return()=>cancelAnimationFrame(id)},[]);return g};
 
 const Tile=({k,v,i})=>{
   const go=useGo(),s=SCALE[k],lv=level(k,v),n=useCount(v,s.d,250+i*110,1200);
-  return html`<div class="sc-t"><b>${v==null?'—':n.toFixed(s.d)+(s.u||'')}</b><span class="nm">${s.l}</span><div class="bar"><i style=${{width:go?Math.round(frac(k,v)*100)+'%':'0%',transitionDelay:(i*.09)+'s'}}></i>${lv>=0&&html`<u style=${{left:'calc('+(go?frac(k,v)*100:0)+'% - 1px)',transitionDelay:(i*.09)+'s'}}></u>`}</div>${lv>=0?html`<em class=${'lv l'+lv}>${LEVELS[lv]}</em>`:html`<em class="lv">N/A</em>`}</div>`};
+  return html`<div class=${'sc-t'+(lv>=0?' l'+lv:'')}><b>${v==null?'—':n.toFixed(s.d)+(s.u||'')}</b><span class="nm">${s.l}</span><div class="bar"><i style=${{width:go?Math.round(frac(k,v)*100)+'%':'0%',transitionDelay:(i*.09)+'s'}}></i>${lv>=0&&html`<u style=${{left:'calc('+(go?frac(k,v)*100:0)+'% - 1px)',transitionDelay:(i*.09)+'s'}}></u>`}</div>${lv>=0?html`<em class=${'lv l'+lv}>${LEVELS[lv]}</em>`:html`<em class="lv">N/A</em>`}</div>`};
 
 export const StatCard=({p,S,theme,id})=>{
   const T=pteam(p),th=themeOf(theme),side=(l,v)=>html`<div class="sc-sd"><span>${l}</span><b>${v}</b></div>`;
@@ -53,15 +53,15 @@ export const cardPng=async(p,S,theme)=>{
   /* спидометр */
   const cx=W/2,cy=318,rad=128,a0=.75*Math.PI,a1=2.25*Math.PI,f=frac('rt',S.M.rt),lv=level('rt',S.M.rt);
   g.lineCap='round';g.lineWidth=18;g.strokeStyle=LN;g.beginPath();g.arc(cx,cy,rad,a0,a1);g.stroke();
-  if(S.M.rt!=null){g.strokeStyle=R;g.beginPath();g.arc(cx,cy,rad,a0,a0+(a1-a0)*f);g.stroke()}
-  tx(S.M.rt==null?'—':S.M.rt.toFixed(2),cx,cy+26,92,'800',TX,'center');tx('RATING',cx,cy+62,22,'700',MU,'center');if(lv>=0)tx(LEVELS[lv],cx,cy-58,20,'800',R,'center');
+  if(S.M.rt!=null){g.strokeStyle=lv>=0?LVC[lv]:R;g.beginPath();g.arc(cx,cy,rad,a0,a0+(a1-a0)*f);g.stroke()}
+  tx(S.M.rt==null?'—':S.M.rt.toFixed(2),cx,cy+26,92,'800',TX,'center');tx('RATING',cx,cy+62,22,'700',MU,'center');if(lv>=0)tx(LEVELS[lv],cx,cy-58,20,'800',LVC[lv],'center');
   const side=(x,l,v)=>{g.fillStyle=BG2;g.fillRect(x,250,230,120);g.fillStyle=R;g.fillRect(x,250,5,120);tx(l,x+28,290,18,'700',MU);tx(String(v),x+28,346,52,'800',TX)};
   side(70,'WIN RATE',S.winrate==null?'—':S.winrate+'%');side(W-300,'MAPS',S.maps||'—');
   /* 6 показателей */
   ORDER.forEach((k,i)=>{const x=70+(i%3)*368,y=440+Math.floor(i/3)*140,w=340,v=S.M[k],s=SCALE[k],l=level(k,v);
-    g.fillStyle=BG2;g.fillRect(x,y,w,118);g.fillStyle=R;g.fillRect(x,y,5,118);
+    const lc=l>=0?LVC[l]:LN;g.fillStyle=BG2;g.fillRect(x,y,w,118);g.fillStyle=lc;g.fillRect(x,y,5,118);
     tx(v==null?'—':v.toFixed(s.d)+(s.u||''),x+26,y+54,46,'800',TX);tx(s.l,x+26,y+84,18,'700',MU);
-    if(l>=0)tx(LEVELS[l],x+w-20,y+84,16,'800',l>=2?R:MU,'right');
-    g.fillStyle=LN;g.fillRect(x+26,y+98,w-52,6);if(v!=null){g.fillStyle=R;g.fillRect(x+26,y+98,(w-52)*frac(k,v),6)}});
+    if(l>=0)tx(LEVELS[l],x+w-20,y+84,16,'800',lc,'right');
+    g.fillStyle=LN;g.fillRect(x+26,y+98,w-52,6);if(v!=null){g.fillStyle=lc;g.fillRect(x+26,y+98,(w-52)*frac(k,v),6)}});
   tx(S.src==='matches'?S.matches+' matches · '+S.maps+' maps · '+S.rounds+' rounds':'Profile averages',70,H-22,18,'500',MU);tx(new Date().toISOString().slice(0,10),W-48,H-22,18,'500',MU,'right');
   return new Promise(r=>cv.toBlob(b=>r(b),'image/png'))};

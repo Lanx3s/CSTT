@@ -13,6 +13,8 @@ export const SCALE={
   adr:{l:'ADR',min:50,max:100,t:[65,72,80],d:1},
   kpr:{l:'KPR',min:.5,max:1,t:[.62,.7,.78],d:2}};
 export const LEVELS=['POOR','OKAY','GOOD','GREAT'];
+/* цвет оценки: красный — плохо, жёлтый — средне, зелёный — хорошо (GREAT — насыщенный зелёный) */
+export const LVC=['#e5484d','#f5b83d','#46c35f','#2fdc6c'];
 export const level=(k,v)=>{const s=SCALE[k];if(v==null||!isFinite(v))return -1;const dir=s.dir||1;let i=0;s.t.forEach(x=>{if(dir>0?v>=x:v<=x)i++});return i};
 export const frac=(k,v)=>{const s=SCALE[k];if(v==null||!isFinite(v))return 0;return Math.max(0,Math.min(1,(v-s.min)/(s.max-s.min)))};
 

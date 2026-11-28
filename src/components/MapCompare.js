@@ -3,8 +3,19 @@ import {useState,useEffect,useRef} from 'react';
 import {html} from '../lib/html.js';
 import {team} from '../lib/data.js';
 import {lang} from '../lib/i18n.js';
-import {compareMaps} from '../lib/mapcmp.js';
-import {Box,Empty,TeamLogo,mapBg} from './common.js';
+import {compareMaps,mapKey} from '../lib/mapcmp.js';
+import {Box,Empty,TeamLogo} from './common.js';
+
+
+/* Заглушки вместо картинок карт: основной цвет карты + второй цвет для еле заметного узора (подобраны по атмосфере карты) */
+const ART={dust2:['#b8925a','#e6c88f','diag'],mirage:['#b8693d','#f0c27e','dots'],inferno:['#9c3f2a','#f08a3c','zig'],nuke:['#44667c','#d3d84a','grid'],ancient:['#3b6a49','#9bd17b','rings'],anubis:['#b8962f','#2f8a90','zig'],cache:['#66763a','#b4c46e','dots'],train:['#565c66','#c25a47','diag'],overpass:['#4a7a68','#a7c4b4','grid'],vertigo:['#3f7fc0','#e3edf8','rings']};
+const shade=(h,k)=>'#'+[1,3,5].map(i=>Math.round(parseInt(h.slice(i,i+2),16)*k).toString(16).padStart(2,'0')).join('');
+const FALL=n=>{let x=0;for(const c of String(n))x=(x*31+c.charCodeAt(0))%360;return 'hsl('+x+' 38% 42%)'};
+export const mapArt=name=>{
+  const k=mapKey(name),a=ART[k];
+  if(!a)return {background:'linear-gradient(135deg,'+FALL(name)+',#222)'};
+  const [b,c,t]=a,S=c+'30',pat={diag:'repeating-linear-gradient(135deg,'+S+' 0 2px,transparent 2px 11px)',dots:'radial-gradient('+S+' 1.6px,transparent 2.2px) 0 0/13px 13px',zig:'repeating-linear-gradient(60deg,'+S+' 0 2px,transparent 2px 12px),repeating-linear-gradient(-60deg,'+S+' 0 2px,transparent 2px 12px)',grid:'linear-gradient('+S+' 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,'+S+' 1px,transparent 1px) 0 0/14px 14px',rings:'repeating-radial-gradient(circle at 0 100%,'+S+' 0 1.5px,transparent 1.5px 12px)'}[t];
+  return {background:pat+',linear-gradient(135deg,'+b+','+shade(b,.62)+')',borderColor:c+'66'}};
 
 const MODES=[['win','WINS','Win %','maps'],['pick','PICK','Pick %','picks'],['ban','BAN','Ban %','bans']];
 const FIELD={win:'played',pick:'picks',ban:'bans'};
@@ -46,4 +57,4 @@ ${rows.length>=3?html`<${Radar} names=${rows.map(r=>r.name)} a=${ta} b=${tb} ca=
 <div class="mc2-r"><div class="mc2-h"><span><${TeamLogo} x=${A} s=${26}/><b>${A.name}</b></span><span></span><span><b>${B.name}</b><${TeamLogo} x=${B} s=${26}/></span></div>
 ${rows.map((r,i)=>{const x=r.a[f],y=r.b[f],lead=x!=null&&y!=null?(x>y?'a':y>x?'b':''):'';
   const side=(v,tv,c,cl)=>html`<div class=${'mc2-v '+cl+(lead&&lead!==(cl==='a'?'a':'b')?' lo':'')}><b>${v==null?'–':Math.round(tv)+'%'}</b><small>${unit(r[cl][cnt])}</small><i style=${{width:(v==null?0:tv)+'%'}}></i></div>`;
-  return html`<div class="mc2-row" key=${r.key}>${side(x,ta[i],ca,'a')}<span class="mc2-mp" style=${mapBg(r.name,.2)}><b>${r.name}</b></span>${side(y,tb[i],cb,'b')}</div>`})}</div></div>`}<//>`};
+  return html`<div class="mc2-row" key=${r.key}>${side(x,ta[i],ca,'a')}<span class="mc2-mp" style=${mapArt(r.name)}><b>${r.name}</b></span>${side(y,tb[i],cb,'b')}</div>`})}</div></div>`}<//>`};

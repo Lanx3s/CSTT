@@ -1,0 +1,9 @@
+<!-- Supabase → Authentication → Email Templates → «Reset Password». Вставьте этот текст вместо стандартного письма.
+     Тема письма, например: CSTT — код для сброса пароля.
+     Важно: переменная {{ .Token }} — это одноразовый код, который пользователь вводит на сайте (страница #/reset). -->
+<div style="font-family:Arial,sans-serif;max-width:420px;margin:0 auto;padding:24px;background:#0f1115;color:#ffffff;border-top:4px solid #d4141c">
+  <h2 style="margin:0 0 12px">Сброс пароля CSTT</h2>
+  <p style="color:#aab4c4;margin:0 0 16px">Введите этот код на сайте, чтобы задать новый пароль:</p>
+  <p style="font-size:34px;font-weight:bold;letter-spacing:8px;margin:0 0 16px;color:#ffffff">{{ .Token }}</p>
+  <p style="color:#8b93a1;font-size:13px;margin:0">Код действует ограниченное время. Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо.</p>
+</div>
