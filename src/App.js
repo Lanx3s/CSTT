@@ -23,11 +23,14 @@ import {Player} from './pages/Player.js';
 import {Stats} from './pages/Stats.js';
 import {Search} from './pages/Search.js';
 import {Forum} from './pages/Forum.js';
+import {TeamApply} from './pages/TeamApply.js';
+import {PlayerStats} from './pages/PlayerStats.js';
+import {TourReg} from './pages/TourReg.js';
 import {GrandFinal,Socials} from './components/Extra.js';
 import {Admin} from './admin/Admin.js';
 
 const parse=()=>location.hash.replace(/^#\/?/,'').split('/');
-const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,login:Login,profile:Profile,user:User,users:Users};
+const ROUTES={'':Home,news:News,matches:Matches,match:Match,tournaments:Tours,tournament:Tour,rankings:Rank,teams:Teams,team:Team,players:Players,player:Player,stats:Stats,search:Search,forum:Forum,apply:TeamApply,pcard:PlayerStats,tourreg:TourReg,login:Login,profile:Profile,user:User,users:Users};
 
 const Ticker=()=>{
   const live=MS.filter(m=>m.st==='live'),up=MS.filter(m=>m.st==='up').sort(byTime).slice(0,8),fin=MS.filter(m=>m.st==='fin').sort(byRecent).slice(0,6);
@@ -40,6 +43,8 @@ export const App=()=>{
   const au=useAuth(),[,f]=useState(0),[r,sr]=useState(parse());
   useEffect(()=>{const h=()=>{sr(parse());scrollTo(0,0)};addEventListener('hashchange',h);return()=>removeEventListener('hashchange',h)},[]);
   useEffect(()=>{document.title=(SITE.nm||'CSTT')+' — Counter-Strike 2'},[]);
+  /* высота шапки для мобильной версии (шапка там зафиксирована, контент сдвигается на её высоту) */
+  useEffect(()=>{const set=()=>{const h=document.querySelector('header.top');h&&document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')};set();addEventListener('resize',set);const ro=typeof ResizeObserver!=='undefined'?new ResizeObserver(set):null,h=document.querySelector('header.top');ro&&h&&ro.observe(h);return()=>{removeEventListener('resize',set);ro&&ro.disconnect()}},[r[0]==='admin']);
   const setL=v=>{setLang(v);f(x=>x+1)};
   if(r[0]==='admin')return html`<${Admin}/>`;
   const P=(r[0]==='news'&&r[1])?NewsPost:ROUTES[r[0]]||Home,hide=(SITE.nav_hide||'').split(',').map(x=>x.trim());

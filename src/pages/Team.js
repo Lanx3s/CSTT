@@ -1,7 +1,7 @@
 import {createElement} from 'react';
 import {html} from '../lib/html.js';
 import {team,TEAMS,MS,TROPH,TI,tour} from '../lib/data.js';
-import {t} from '../lib/i18n.js';
+import {t,lang} from '../lib/i18n.js';
 import {record,formOf,teamMaps,teamEvents,byTime,byRecent,f2} from '../lib/calc.js';
 import {Box,TeamLogo,Flag,Empty,Plate,Bm,Rt,PlayerPic,mapBg,Row,TourLogo,FavBtn,AchStrip,Ico,PT} from '../components/common.js';
 
@@ -27,12 +27,14 @@ ${x.weeks!=null&&html`<${Row2} l=${t('weeksTop')}>${x.weeks}<//>`}
 <${Row2} l=${t('win')}>${R.n?R.wr+'% ':'–'}<em class="sub">(${R.w}-${R.l}${R.d?'-'+R.d:''})</em><//>
 ${x.founded&&html`<${Row2} l=${t('founded')}>${x.founded}<//>`}
 ${x.coach&&html`<${Row2} l=${t('coach')}>${x.coach}<//>`}
+${x.elo>0&&html`<${Row2} l="AVG ELO">${x.elo}<//>`}
 <${Row2} l=${t('form')}><span class="form">${formOf(x.id,5).map((f,i)=>html`<i key=${i} class=${'f-'+f}>${f==='w'?'W':f==='l'?'L':'D'}</i>`)}</span><//></div>
 <${AchStrip} items=${[]} trophies=${tr}/></section>
 <div class="stts">${[[R.n,t('matches')],[R.n?R.wr+'%':'–',t('win')],[mp.length?Math.round(mp.reduce((s,r)=>s+r.w,0)/Math.max(1,mp.reduce((s,r)=>s+r.p,0))*100)+'%':'–',t('mapWin')],[f2(art),t('avgRt')],[tr.length,t('trophies')],[ev.length,t('tournaments')]].map(([v,l])=>html`<div class="stt" key=${l}><b>${v}</b><span>${l}</span></div>`)}</div>
 ${ti.length>0&&html`<div class="plates">${ti.map(y=>html`<${Plate} key=${y.id} x=${y}/>`)}</div>`}
 <div class="g2w"><div class="col">
 ${pl.length>0&&html`<${Box} h=${t('roster')}><${PT} list=${pl} team=${1}/><//>`}
+${x.subs.length>0&&html`<${Box} h=${lang==='ru'?'Запасные':'Substitutes'}><${PT} list=${x.subs} team=${1}/><//>`}
 ${pend.length>0&&html`<${Box} h=${t('live')+' / '+t('upc')}><div class="mlist">${pend.slice(0,5).map(m=>html`<${Bm} key=${m.id} m=${m}/>`)}</div><//>`}
 <${Box} h=${t('hist')}>${fin.length?fin.slice(0,12).map(m=>html`<${Row} key=${m.id} m=${m} ev=${1}/>`):html`<${Empty}/>`}<//>
 ${tr.length>0&&html`<${Box} h=${t('trophies')}><div class="tro">${tr.map(y=>{const o=tour(y.tour);return html`<a class="tr1" key=${y.id} href=${o?'#/tournament/'+o.id:'#/team/'+x.id}>${y.img?html`<img src=${y.img} alt=""/>`:html`<span class="cup">★</span>`}<b>${y.title||(o&&o.n)}</b><small>${[y.place,y.year].filter(Boolean).join(' · ')}</small>${y.prize&&html`<small class="up">${y.prize}</small>`}</a>`})}</div><//>`}</div>

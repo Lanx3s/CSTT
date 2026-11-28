@@ -27,6 +27,7 @@ export const Home=()=>{
   return html`<div class="g3">
 <aside class="al">
 ${on('s_rank')&&html`<${Box} h=${t('rank')} href="#/rankings">${rk.slice(0,10).map(x=>html`<a class="rk1" key=${x.id} href=${'#/team/'+x.id}><span class="mu">${x.rank}</span><${TeamLogo} x=${x} s=${22}/><span class="tn">${x.name}</span><em>${x.pts}</em><i class=${x.ch>0?'up':x.ch<0?'dn':'mu'}>${x.ch>0?'▲'+x.ch:x.ch<0?'▼'+Math.abs(x.ch):'–'}</i></a>`)}<//>`}
+<a class="regbtn" href="#/apply"><i>+</i><span><b>Зарегистрировать команду</b><small>Подать заявку на профиль команды</small></span></a>
 ${on('s_ann')&&html`<${Box} h=${t('ann')} href="#/tournaments">${TR.filter(o=>o.s!=='fin').slice(0,5).map(o=>html`<a class="ev1" key=${o.id} href=${'#/tournament/'+o.id}><${TourLogo} o=${o} s=${34}/><span><b>${o.n}</b><small>${[o.d,o.pr].filter(Boolean).join(' · ')}</small></span></a>`)}${!TR.some(o=>o.s!=='fin')&&html`<${Empty}/>`}<//>`}
 ${SITE.ban_img&&html`<a class="adbn" href=${SITE.ban_url||'#'} target=${SITE.ban_url?'_blank':null} rel="noreferrer"><img src=${SITE.ban_img} alt=""/></a>`}
 </aside>

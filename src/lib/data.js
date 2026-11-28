@@ -54,9 +54,9 @@ export const when=m=>{
   const dt=new Date(y,mo-1,da,hh,mm);return isNaN(dt)?null:dt};
 
 export const load=d=>{
-  TEAMS=(d.teams||[]).map(x=>({id:x.id,name:x.name||'',tag:x.tag||(x.name||'').slice(0,3).toUpperCase(),cc:(x.cc||'').trim().toUpperCase(),col:x.col||'#445066',logo:x.logo,pts:num(x.pts),ch:num(x.ch),coach:x.coach||'',about:x.about||'',region:x.region||'',flag:x.flag,weeks:x.weeks==null||x.weeks===''?null:num(x.weeks),banner:x.banner,founded:x.founded||'',slogan:x.slogan||'',web:x.web||'',tw:x.tw||'',tg:x.tg||'',pl:[]}));
+  TEAMS=(d.teams||[]).map(x=>({id:x.id,name:x.name||'',tag:x.tag||(x.name||'').slice(0,3).toUpperCase(),cc:(x.cc||'').trim().toUpperCase(),col:x.col||'#445066',logo:x.logo,pts:num(x.pts),ch:num(x.ch),coach:x.coach||'',about:x.about||'',region:x.region||'',flag:x.flag,weeks:x.weeks==null||x.weeks===''?null:num(x.weeks),banner:x.banner,founded:x.founded||'',slogan:x.slogan||'',web:x.web||'',tw:x.tw||'',tg:x.tg||'',col2:x.col2||'',elo:num(x.elo),pl:[],subs:[]}));
   _T=new Map(TEAMS.map(x=>[x.id,x]));
-  PL=(d.players||[]).map(p=>{const tm=_T.has(p.team)?p.team:null;const o={id:p.id,nick:p.nick||'',name:p.name||'',cc:(p.cc||'').trim().toUpperCase(),flag:p.flag,role:p.role||'',age:num(p.age),hs:num(p.hs),team:tm,photo:p.photo,prev:p.prev||'',banner:p.banner,about:p.about||'',since:p.since||'',tw:p.tw||'',tt:p.tt||'',ig:p.ig||'',rt:num(p.rt),kd:num(p.kd),adr:num(p.adr),kast:num(p.kast),maps:num(p.maps),kpr:num(p.kpr),dpr:num(p.dpr),imp:num(p.imp),prize:p.prize||'',bgm:p.bgm||'',bgb:p.bgb||'',bgc:p.bgc||'',bgp:p.bgp||''};if(tm!=null)_T.get(tm).pl.push(o);return o});
+  PL=(d.players||[]).map(p=>{const tm=_T.has(p.team)?p.team:null;const o={id:p.id,nick:p.nick||'',name:p.name||'',cc:(p.cc||'').trim().toUpperCase(),flag:p.flag,role:p.role||'',age:num(p.age),hs:num(p.hs),team:tm,photo:p.photo,prev:p.prev||'',banner:p.banner,about:p.about||'',since:p.since||'',tw:p.tw||'',tt:p.tt||'',ig:p.ig||'',rt:num(p.rt),kd:num(p.kd),adr:num(p.adr),kast:num(p.kast),maps:num(p.maps),kpr:num(p.kpr),dpr:num(p.dpr),imp:num(p.imp),prize:p.prize||'',bgm:p.bgm||'',bgb:p.bgb||'',bgc:p.bgc||'',bgp:p.bgp||'',elo:num(p.elo),sub:num(p.sub)?1:0};if(tm!=null)(o.sub?_T.get(tm).subs:_T.get(tm).pl).push(o);return o});
   _P=new Map(PL.map(x=>[x.id,x]));
   TEAMS.forEach(x=>x.pl.sort((a,b)=>b.rt-a.rt));
   TR=(d.tournaments||[]).map(o=>({id:o.id,bgs:o.bgs||'',n:o.n||'',d:o.d||'',pr:o.pr||'',tn:num(o.tn),st:o.st||'',s:o.s||'up',img:o.img,logo:o.logo,col:o.col||'',loc:o.loc||'',fmt:o.fmt||'',organizer:o.organizer||'',tier:o.tier||'',stream:o.stream||'',rules:o.rules||'',pool:parsePool(o.mappool),sw:num(o.sw)||3,sl:num(o.sl)||3,adv:num(o.adv)||2,prizes:lines(o.prizes).map(l=>l.split('|').map(x=>x.trim())),winner:_T.has(o.winner)?o.winner:null,mvp:o.mvp,trophy:o.trophy,ds:[o.ru||o.en||'',o.en||o.ru||'']}));
@@ -78,10 +78,10 @@ export const load=d=>{
   TI=(d.titles||[]).map(x=>({id:x.id,player:ref(x.player),team:ref(x.team),title:x.title||'',sub:x.sub||'',kind:x.kind||'custom',col:x.col||'',icon:x.icon||'',img:x.img,year:x.year||'',tour:ref(x.tour),ord:num(x.ord)})).sort((a,b)=>a.ord-b.ord||b.id-a.id);
   TT=(d.tteams||[]).filter(x=>_T.has(x.team)).map(x=>({id:x.id,tour:x.tour,team:x.team,grp:x.grp||'',seed:num(x.seed),note:x.note||''}));
   PH=(d.phist||[]).map(x=>({id:x.id,player:ref(x.player),team:_T.has(x.team)?x.team:null,dates:x.dates||'',ord:num(x.ord),tro:(x.tro||'').split(/[\s,;]+/).filter(Boolean).map(Number),hide:x.hide==1||x.hide==='1'})).sort((a,b)=>a.ord-b.ord||a.id-b.id);
-  MAPS=(d.maps||[]).map(x=>({id:x.id,name:x.name||'',img:x.img,col:x.col||'',active:x.active!==0&&x.active!=='0'}));
-  {const DEF=['Ancient','Anubis','Cache','Dust2','Inferno','Mirage','Nuke','Overpass'],nz=s=>(s||'').toLowerCase().replace(/^de[_ ]/,'').replace(/[^a-z0-9]/g,'');
-   if(!MAPS.length)MAPS=DEF.map((n,i)=>({id:-1-i,name:n,img:null,col:'',active:true}));
-   else if(!MAPS.some(x=>nz(x.name)==='cache'))MAPS.push({id:-99,name:'Cache',img:null,col:'',active:true})}
+  MAPS=(d.maps||[]).map(x=>({id:x.id,name:x.name||'',img:x.img,col:x.col||'',active:x.active!==0&&x.active!=='0',cmp:x.cmp!==0&&x.cmp!=='0',ord:num(x.ord)}));
+  {const DEF=['Dust2','Mirage','Inferno','Nuke','Ancient','Anubis','Cache','Train','Overpass','Vertigo'],nz=s=>(s||'').toLowerCase().replace(/^de[_ ]/,'').replace(/[^a-z0-9]/g,'');
+   if(!MAPS.length)MAPS=DEF.map((n,i)=>({id:-1-i,name:n,img:null,col:'',active:true,cmp:true,ord:i+1}));
+   else if(!MAPS.some(x=>nz(x.name)==='cache'))MAPS.push({id:-99,name:'Cache',img:null,col:'',active:true,cmp:true,ord:7})}
   /* Swiss: команды сами попадают в матчи следующего раунда по своему рекорду (W-L), пары по посеву: сильнейший — слабейший */
   const SWQ=new Map();
   {const BKR=/^\d+-\d+$/,rank=new Map(TEAMS.map(x=>[x.id,x.pts]));

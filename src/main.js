@@ -7,6 +7,8 @@ import {refreshAuth} from './lib/auth.js';
 import {App} from './App.js';
 import './styles/style.css';
 import './styles/admin.css';
+import './styles/v7.css';
+import './styles/mobile.css';
 
 const Root=()=>{
   const [s,ss]=useState('load'),[e,se]=useState('');

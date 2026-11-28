@@ -4,6 +4,7 @@ import {MS,PS,TR,team,tour,player,SITE} from '../lib/data.js';
 import {t,L} from '../lib/i18n.js';
 import {Compare} from '../components/Fx.js';
 import {Lineups,MatchInfo} from '../components/Extra.js';
+import {MapCompare} from '../components/MapCompare.js';
 import {winner,h2h,byRecent,byTime,f2} from '../lib/calc.js';
 import {Box,Empty,TeamLogo,Flag,Bm,Rt,mapBg,flagSrc,MapTile,TourLogo,Chip,Row,PlayerPic} from '../components/common.js';
 
@@ -53,6 +54,7 @@ ${(m.note||(f&&w!=null))&&html`<div class="mh-note">${m.note}${f&&w!=null&&html`
 <${Lineups} m=${m}/>
 <${Veto} m=${m}/>
 <${Stats} m=${m}/>
+<${MapCompare} m=${m}/>
 <${Comments} kind="match" id=${m.id}/></div>
 <aside>
 <${MatchInfo} m=${m}/>

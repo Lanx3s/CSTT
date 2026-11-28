@@ -1,0 +1,40 @@
+/* ===== Мобильная версия CSTT: только @media (max-width), десктопные стили не затрагиваются ===== */
+@media(max-width:760px){
+  /* шапка с навигацией зафиксирована: остаётся на экране при прокрутке; контент сдвинут на её высоту (--hh задаёт App.js) */
+  .app{padding-top:var(--hh,92px)}
+  .top{position:fixed;top:0;left:0;right:0;z-index:1000;-webkit-transform:translateZ(0);transform:translateZ(0)}
+  html{scroll-padding-top:var(--hh,92px)}
+  .app,.pg,main.wrap{max-width:100%;overflow-wrap:anywhere}
+  img,video,canvas,svg{max-width:100%}
+  /* удобные для пальца элементы */
+  .hnav a{min-height:44px;display:inline-flex;align-items:center}
+  .lang button{min-height:40px;min-width:44px}
+  .tabs button{min-height:44px}
+  .btn,.b,.tools .btn{min-height:42px}
+  .ap input:not([type=checkbox]):not([type=color]),.ap select,.ap textarea,.srch input,input[type=search],input[type=text],input[type=password],input[type=email]{font-size:16px}
+  .ap-ck input,.ap-cb input{width:22px;height:22px}
+  .ap-ck label,.ap-cb{min-height:44px;align-items:center}
+  .ap-lk{padding:8px 4px;min-height:36px}
+  /* новые разделы */
+  .ap-g{grid-template-columns:1fr;padding:12px}.ap-cols{grid-template-columns:1fr 1fr}
+  .ap-p{grid-template-columns:1fr;gap:12px;padding:12px}.ap-pf{grid-template-columns:1fr 1fr}
+  .ap-box{width:170px;height:170px}.ap-img.cp .ap-box{width:120px;height:120px}
+  .ap-act .btn{flex:1;justify-content:center}
+  .ap-hd h1{font-size:20px}
+  .thd .th-reg{position:static;margin:12px 0 0;width:100%;justify-content:center}
+  .regbtn{margin:8px 0}
+  .mc2{grid-template-columns:1fr}.mc2-l{border-right:0;border-bottom:1px solid var(--ln)}
+  .mc2-h,.mc2-row{grid-template-columns:1fr 86px 1fr;gap:6px;padding-left:10px;padding-right:10px}
+  .mc2-v b{font-size:19px}.mc2-mp b{font-size:10px;letter-spacing:.02em}.mc2-h span{font-size:12px}
+  .sc{padding:16px 14px 12px}
+  .sc-hd{gap:12px;flex-wrap:wrap}.sc-ph{width:60px;height:60px}.sc-nm h2{font-size:24px}.sc-br{margin-left:auto}.sc-br b{font-size:20px}
+  .sc-mn{grid-template-columns:1fr 1fr;gap:10px}.sc-g{grid-column:1/-1;order:-1;margin:0 auto;width:230px}.sc-sd{max-width:none;width:100%!important;padding:10px 12px}.sc-sd b{font-size:24px}.sc-gc b{font-size:46px}
+  .sc-gr{grid-template-columns:1fr 1fr;gap:10px}.sc-t b{font-size:24px}
+  .sc-act .btn{flex:1 1 100%;justify-content:center}
+  .hxp-stat{padding:8px 11px}
+}
+@media(max-width:480px){
+  .ap-pf{grid-template-columns:1fr}.ap-cols{grid-template-columns:1fr}
+  .pm-sum b{font-size:15px}
+  .mc2-h b{font-size:11px}
+}

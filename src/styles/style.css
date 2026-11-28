@@ -889,9 +889,9 @@ linear-gradient(0deg,color-mix(in srgb,var(--pc) 40%,transparent) 0,transparent 
 /* ===== v6.8: страница матча — флаги стран фоном плашки, ровные логотипы и названия ===== */
 .mhd{isolation:isolate;overflow:hidden}
 /* флаг своей команды на своей половине: размытый, к центру плавно растворяется в цвет плашки */
-.mhd>.mhf{display:block!important;position:absolute;top:-14px;bottom:-14px;width:46%;background-size:cover;background-position:center;background-repeat:no-repeat;filter:blur(7px) saturate(1.1);opacity:.6;z-index:0;pointer-events:none}
-.mhd>.mhf.a{left:-14px;-webkit-mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
-.mhd>.mhf.b{right:-14px;-webkit-mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
+.mhd>.mhf{display:block!important;position:absolute;top:0;bottom:0;width:46%;background-size:100% 100%;background-position:center;background-repeat:no-repeat;opacity:.38;z-index:0;pointer-events:none}
+.mhd>.mhf.a{left:0;-webkit-mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(90deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
+.mhd>.mhf.b{right:0;-webkit-mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%);mask-image:linear-gradient(270deg,#000 0,rgba(0,0,0,.78) 28%,rgba(0,0,0,.3) 62%,transparent 100%)}
 .mhd .mh-main{position:relative;z-index:1;align-items:start!important}
 /* одинаковая сетка у обеих команд: логотип в квадрате, название в одну строку, счёт, место */
 .mhd .mteam{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;min-width:0}

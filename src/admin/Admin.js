@@ -7,9 +7,10 @@ import {S,nm,ctx,STAGES} from './schema.js';
 import {MapSel,MapsEd,VetoEd,PrizeEd,MdEd,PlSel,CcSel,PalSel,TroSel} from './editors.js';
 import {genSingle,genDouble,genSwiss,genGroups,genGsl} from './gen.js';
 import {Plate} from '../components/common.js';
+import {TeamApps,TourRegs,MapCmp} from './Apps.js';
 
-const ORDER=['bracket','part','tournaments','matches','pstats','teams','players','phist','profiles','titles','trophies','news','maps','site'];
-const TITLE={bracket:'Сетки турниров',part:'Участники турниров'};
+const ORDER=['tapps','tregs','bracket','part','tournaments','matches','pstats','teams','players','phist','profiles','titles','trophies','news','mapcmp','maps','site'];
+const TITLE={bracket:'Сетки турниров',part:'Участники турниров',tapps:'Заявки команд',tregs:'Заявки на турниры',mapcmp:'Карты для сравнения'};
 const WIDE=['trsel','pal','plsel','area','md','mapsel','mapsed','vetoed','prized','h','img','imgs'];
 
 /* ---------- универсальное поле ---------- */
@@ -158,4 +159,4 @@ export const Admin=()=>{
   return html`<div class="adm"><div class="app"><div class="sb"><h2>CSTT Админ</h2>${tabs.map(([k,l])=>html`<button key=${k} class=${tab===k?'on':''} onClick=${()=>go(k)}>${l}</button>`)}<a href="#/">← На сайт</a></div>
 <div class="mn">${msg&&html`<div class="msg" style=${msg[1]?{background:'#c62828'}:{}}>${msg[0]}</div>`}
 ${MISSING.length>0&&html`<div class="warn">В базе нет таблиц: ${MISSING.join(', ')}. Откройте Supabase → SQL Editor и выполните обновлённый файл supabase/schema.sql (его можно запускать повторно).</div>`}
-${tab==='home'?html`<${Home} D=${D} go=${go}/>`:tab==='bracket'?html`<${BracketEd} D=${D} reload=${reload} note=${note} open=${m=>go('matches',{...m})}/>`:tab==='part'?html`<${PartEd} D=${D} reload=${reload} note=${note}/>`:tab==='bk'?html`<div><h1>Резервная копия</h1><p class="hint">Скачайте все данные одним JSON-файлом. Supabase также делает собственные копии базы (Database → Backups в панели Supabase).</p><button class="b" onClick=${exp}>Скачать копию</button></div>`:html`<${Crud} key=${tab+(init?init.id:'')} c=${tab} D=${D} reload=${reload} note=${note} init=${init}/>`}</div></div></div>`};
+${tab==='home'?html`<${Home} D=${D} go=${go}/>`:tab==='bracket'?html`<${BracketEd} D=${D} reload=${reload} note=${note} open=${m=>go('matches',{...m})}/>`:tab==='part'?html`<${PartEd} D=${D} reload=${reload} note=${note}/>`:tab==='tapps'?html`<${TeamApps} D=${D} reload=${reload} note=${note}/>`:tab==='tregs'?html`<${TourRegs} D=${D} reload=${reload} note=${note}/>`:tab==='mapcmp'?html`<${MapCmp} D=${D} reload=${reload} note=${note}/>`:tab==='bk'?html`<div><h1>Резервная копия</h1><p class="hint">Скачайте все данные одним JSON-файлом. Supabase также делает собственные копии базы (Database → Backups в панели Supabase).</p><button class="b" onClick=${exp}>Скачать копию</button></div>`:html`<${Crud} key=${tab+(init?init.id:'')} c=${tab} D=${D} reload=${reload} note=${note} init=${init}/>`}</div></div></div>`};

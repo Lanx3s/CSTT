@@ -77,6 +77,7 @@ export const PlayerHero=({p,role})=>{
   return html`<div class=${'hxp'+(c?' bg':'')+(c&&p.bgp==='none'?' np':'')+(c&&p.bgp==='dots'?' dt':'')} style=${c?{'--pc':c,'--b1':(PBASE[p.bgb]||PBASE['']) [0],'--b2':(PBASE[p.bgb]||PBASE[''])[1]}:null}>
 <div class="hxp-ic">${p.cc&&html`<span class="hxp-i fl"><${Flag} x=${p}/></span>`}${!T.tbd&&html`<a class="hxp-i lg" href=${'#/team/'+T.id} title=${T.name}><${TeamLogo} x=${T} s=${34}/></a>`}${role}</div>
 <${PlayerPic} p=${p} cls="xl"/>
+<a class="hxp-stat" href=${'#/pcard/'+p.id} title=${ru?'Статистика игрока':'Player stats'}><i></i>${ru?'Статистика':'Stats'}</a>
 <div class="hxp-nm"><b>${p.nick}</b>${sub&&html`<small>${sub}</small>`}</div></div>`};
 
 /* ---------- плашка «История команд и достижения» (без дат) ---------- */
