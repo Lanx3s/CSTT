@@ -38,3 +38,10 @@
   .pm-sum b{font-size:15px}
   .mc2-h b{font-size:11px}
 }
+@media(max-width:760px){
+  .wnr{padding:20px 14px 18px}.wnr-cup{display:none}
+  .wnr-hd{font-size:11px;letter-spacing:.1em;gap:10px}
+  .wnr-lg{width:96px;height:96px}.wnr-lg .tlg{max-width:70px;max-height:70px}
+  .wnr-tm h2{font-size:26px}.wnr-ch{gap:6px}.wnr-c{font-size:12px;padding:6px 10px}
+  .wnr-mvp{width:100%;box-sizing:border-box}
+}

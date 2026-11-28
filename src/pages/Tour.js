@@ -6,6 +6,7 @@ import {tourTeams,playerAgg,mapStats,byTime,byRecent,f2,f1,phases} from '../lib/
 import {Box,Rows,Row,TeamLogo,TeamLink,Bm,Empty,Tabs,Rt,Flag,MapTile,Chip,TourLogo,tourStyle,stLabel,Ico,NewsRow,mapInfo} from '../components/common.js';
 import {Bracket} from '../components/Brackets.js';
 import {Md} from '../components/Md.js';
+import {Winner} from '../components/Winner.js';
 import {TeamsAttending} from '../components/Extra.js';
 
 const medal=i=>['trophy','medal','medal'][i]||null;
@@ -54,5 +55,5 @@ export const Tour=({id,tab:tab0})=>{
 <section class="thd" style=${tourStyle(o)}><${TourLogo} o=${o} s=${96}/><div class="th-i"><div class="th-t"><span class=${'badge '+o.s}>${o.s==='live'?'● ':''}${stLabel(o.s)}</span>${o.tier&&html`<${Chip}>${o.tier}<//>`}${o.organizer&&html`<span class="mu">${o.organizer}</span>`}</div><h1>${o.n}</h1>
 <div class="kv"><div><b>${o.pr||'–'}</b><span>${t('prize')}</span></div><div><b>${o.d||'–'}</b><span>${t('dates')}</span></div><div><b>${o.tn||teams.length||'–'}</b><span>${t('teamsN')}</span></div><div><b>${o.loc||'–'}</b><span>${t('loc')}</span></div>${o.fmt&&html`<div><b>${o.fmt}</b><span>${t('fmt')}</span></div>`}</div>${o.s!=='fin'&&o.reg!==0&&html`<a class="btn th-reg" href=${'#/tourreg/'+o.id}>Регистрация команды</a>`}</div>
 </section>
-${(win||mvp)&&html`<div class="win">${o.trophy&&html`<img class="cup" src=${o.trophy} alt=""/>`}${win&&html`<a class="wb" href=${'#/team/'+win.id}><small>${t('winner')}</small><span><${TeamLogo} x=${win} s=${44}/><b>${win.name}</b></span></a>`}${mvp&&html`<a class="wb" href=${'#/player/'+mvp.id}><small>${t('mvp')}</small><span><${Flag} x=${mvp}/><b>${mvp.nick}</b></span></a>`}</div>`}
+${(win||mvp)&&html`<${Winner} o=${o} win=${win} mvp=${mvp}/>`}
 <${Tabs} tabs=${T} cur=${tab} on=${go}/>${body[tab]||body.overview}</div>`};
